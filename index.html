@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="color-scheme" content="dark" />
+  <title>Jongho Park — Portfolio</title>
+  <meta name="description" content="AI Engineer & Data Scientist Jongho Park — ResearchQ, Interview Easy, Young & Rich Report, Vationo." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<main class="bento">
+
+  <!-- ① HERO — aurora mesh + name -->
+  <div id="hero" class="pebble">
+    <div class="aurora" aria-hidden="true">
+      <div class="a-blob a1"></div>
+      <div class="a-blob a2"></div>
+      <div class="a-blob a3"></div>
+      <div class="a-blob a4"></div>
+    </div>
+    <div class="hero-content">
+      <h1 class="hero-name">Jongho Park</h1>
+      <p class="hero-role">AI Engineer · Data Scientist · Quant Developer</p>
+      <div class="hero-pills">
+        <span>Python</span><span>LLM</span><span>Deep Learning</span><span>MLOps</span><span>BigQuery</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ② ResearchQ — live network graph canvas -->
+  <div id="rq" class="pebble">
+    <canvas id="network-canvas" class="fill-canvas" aria-hidden="true"></canvas>
+    <div class="card-content bottom-overlay">
+      <h2 class="card-title">ResearchQ</h2>
+      <p class="card-sub">AI Data Intelligence Platform</p>
+      <div class="card-tags">
+        <span>Python</span><span>BigQuery</span><span>FastAPI</span><span>ML</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ③ Interview Easy — animated chat bubbles -->
+  <div id="iv" class="pebble">
+    <div class="chat-scene" id="chat-scene" aria-hidden="true"></div>
+    <div class="card-content bottom-overlay">
+      <h2 class="card-title">Interview Easy</h2>
+      <p class="card-sub">AI Interview Coaching SaaS</p>
+    </div>
+  </div>
+
+  <!-- ④ Vationo — scrolling price chart canvas -->
+  <div id="vat" class="pebble">
+    <canvas id="chart-canvas" class="fill-canvas" aria-hidden="true"></canvas>
+    <div class="price-hud" aria-live="polite">
+      <span id="price-val">—</span>
+      <span id="price-delta" class="price-delta">+0.00%</span>
+    </div>
+    <div class="card-content bottom-overlay">
+      <h2 class="card-title">Vationo</h2>
+      <p class="card-sub">Transformer-based AI Quant</p>
+    </div>
+  </div>
+
+  <!-- ⑤ Young & Rich Report — animated bar chart canvas -->
+  <div id="yr" class="pebble">
+    <canvas id="bar-canvas" class="fill-canvas" aria-hidden="true"></canvas>
+    <div class="card-content bottom-overlay">
+      <h2 class="card-title">Young &amp; Rich Report</h2>
+      <p class="card-sub">Investment Insight Reports</p>
+    </div>
+  </div>
+
+  <!-- ⑥ Data Stack — staggered pill wave -->
+  <div id="sd" class="pebble">
+    <div class="card-content sd-content">
+      <p class="section-label">Data &amp; Cloud Stack</p>
+      <div class="pill-grid" id="data-pills"></div>
+    </div>
+  </div>
+
+  <!-- ⑦ Roles — cycling highlighter -->
+  <div id="rl" class="pebble">
+    <div class="card-content roles-content">
+      <p class="section-label">Positions</p>
+      <div id="role-list" class="role-list"></div>
+    </div>
+  </div>
+
+  <!-- ⑨ ML Neural Net — canvas activation animation -->
+  <div id="ml" class="pebble">
+    <canvas id="nn-canvas" class="fill-canvas" aria-hidden="true"></canvas>
+    <div class="card-content bottom-overlay">
+      <p class="section-label">ML Stack</p>
+      <div class="ml-pills">
+        <span>PyTorch</span><span>Transformers</span><span>LangChain</span>
+        <span>MLflow</span><span>Docker</span><span>GCP</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ⑩ Contact — animated shimmer gradient -->
+  <div id="ct" class="pebble">
+    <div class="ct-bg" aria-hidden="true"></div>
+    <div class="card-content ct-content">
+      <p class="ct-headline">Let's Build<br/>Together</p>
+      <p class="ct-desc">AI · Data · Quant — ambitious problems</p>
+      <a href="mailto:hello@jonghopark.com" class="ct-btn" id="contact-btn">
+        Contact Me
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M5 12h14M12 5l7 7-7 7"/>
+        </svg>
+      </a>
+    </div>
+  </div>
+
+</main>
+
+<script src="main.js"></script>
+</body>
+</html>
