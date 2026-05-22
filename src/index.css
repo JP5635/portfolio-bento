@@ -1,6 +1,5 @@
 /* ================================================
-   Pebble Bento Portfolio — style.css
-   iOS Dashboard Style · Dark · Animated · English
+   Pebble Bento Portfolio — index.css
    ================================================ */
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -111,7 +110,6 @@ html, body {
 #yr.pebble  .bottom-overlay { background: linear-gradient(to top, #180500 60%, transparent); }
 #ml.pebble  .bottom-overlay { background: linear-gradient(to top, #08051c 60%, transparent); }
 
-/* card-icon removed — titles are the hero */
 .card-title {
   font-size: 1.6rem;
   font-weight: 800;
@@ -365,8 +363,6 @@ html, body {
   transition: background 0.4s, box-shadow 0.4s;
 }
 
-
-
 /* ═══════════════════════════
    ⑨ ML NEURAL NET — canvas
 ═══════════════════════════ */
@@ -441,6 +437,7 @@ html, body {
   background: rgba(255,255,255,0.26);
   transform: translateX(5px);
 }
+
 
 /* ═══════════════════════════
    RESPONSIVE
