@@ -1,7 +1,9 @@
-import React, { useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 export default function ResearchQCard() {
   const canvasRef = useRef(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -190,7 +192,7 @@ export default function ResearchQCard() {
       if (paperBorderAlpha > 0.005) {
         ctx.beginPath();
         ctx.roundRect(paperX, paperY, paperW, paperH, 8);
-        ctx.strokeStyle = `rgba(255, 255, 255, ${paperBorderAlpha})`;
+        ctx.strokeStyle = `rgba(232, 80, 83, ${paperBorderAlpha * 2})`;
         ctx.lineWidth = 1.5;
         ctx.stroke();
       }
@@ -267,7 +269,7 @@ export default function ResearchQCard() {
         p.x = targetX;
         p.y = targetY;
 
-        let r = 255, g = 255, b = 255, alpha = 0.4;
+        let r = 60, g = 60, b = 60, alpha = 0.45;
         if (p.t > 0.05) {
           let targetColor = '#818cf8';
           if (p.nodeIdx !== -1) {
@@ -280,10 +282,10 @@ export default function ResearchQCard() {
           const tg = parseInt(hex.substring(2, 4), 16);
           const tb = parseInt(hex.substring(4, 6), 16);
 
-          r = Math.round(255 + (tr - 255) * easeT);
-          g = Math.round(255 + (tg - 255) * easeT);
-          b = Math.round(255 + (tb - 255) * easeT);
-          alpha = 0.4 + 0.45 * easeT;
+          r = Math.round(60 + (tr - 60) * easeT);
+          g = Math.round(60 + (tg - 60) * easeT);
+          b = Math.round(60 + (tb - 60) * easeT);
+          alpha = 0.45 + 0.4 * easeT;
         }
 
         ctx.beginPath();
@@ -325,7 +327,7 @@ export default function ResearchQCard() {
           ctx.fill();
           ctx.shadowBlur = 0;
 
-          ctx.fillStyle = `rgba(255, 255, 255, ${0.8 * activeLabelsAlpha})`;
+          ctx.fillStyle = `rgba(18, 18, 18, ${0.85 * activeLabelsAlpha})`;
           ctx.font = `600 ${n.r === 8 ? 9.5 : 8}px Inter, sans-serif`;
           ctx.textAlign = 'center';
           ctx.fillText(n.label, n.cx, n.cy - n.r - 4);
@@ -344,17 +346,15 @@ export default function ResearchQCard() {
   }, []);
 
   return (
-    <div id="rq" className="pebble">
-      <canvas ref={canvasRef} id="network-canvas" className="fill-canvas" aria-hidden="true"></canvas>
-      <div className="card-content bottom-overlay">
-        <h2 className="card-title">ResearchQ</h2>
-        <p className="card-sub">AI Data Intelligence Platform</p>
-        <div className="card-tags">
-          <span>Python</span>
-          <span>BigQuery</span>
-          <span>FastAPI</span>
-          <span>ML</span>
-        </div>
+    <div id="rq" className="featured-card" onClick={() => navigate('/researchq')}>
+      <div className="featured-thumb">
+        <canvas ref={canvasRef} className="fill-canvas" aria-hidden="true"></canvas>
+        <div className="featured-gradient" aria-hidden="true"></div>
+      </div>
+      <div className="featured-details">
+        <span className="featured-meta">ML/NLP</span>
+        <h3 className="featured-title">ResearchQ</h3>
+        <p className="featured-desc">LLM-powered research platform serving 2.7K+ users with custom RAG pipeline.</p>
       </div>
     </div>
   );

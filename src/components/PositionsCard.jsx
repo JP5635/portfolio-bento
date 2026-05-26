@@ -34,7 +34,7 @@ export default function PositionsCard() {
                 <span
                   className="role-dot"
                   style={{
-                    background: isActive ? role.color : 'rgba(255,255,255,0.15)',
+                    background: isActive ? role.color : 'rgba(18, 18, 18, 0.15)',
                     boxShadow: isActive ? `0 0 9px ${role.color}` : ''
                   }}
                 ></span>

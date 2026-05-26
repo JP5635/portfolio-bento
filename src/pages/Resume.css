@@ -1,0 +1,143 @@
+.resume-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 60px 20px;
+  color: #333333;
+  font-family: 'Inter', 'Pretendard', sans-serif;
+  line-height: 1.6;
+  background: #F9F9F9;
+  min-height: 100vh;
+}
+
+.resume-header {
+  margin-bottom: 40px;
+  text-align: left;
+}
+
+.resume-name {
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: #111111;
+  margin-top: 10px;
+  margin-bottom: 5px;
+}
+
+.resume-contact {
+  color: #777777;
+  font-size: 0.95rem;
+}
+
+.resume-contact a {
+  color: #E85053;
+  text-decoration: none;
+}
+
+.resume-contact a:hover {
+  text-decoration: underline;
+}
+
+.resume-section {
+  margin-bottom: 35px;
+}
+
+.resume-section h2 {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #E85053;
+  margin-bottom: 15px;
+  border-bottom: 1px solid rgba(0,0,0,0.1);
+  padding-bottom: 5px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.resume-item {
+  margin-bottom: 20px;
+}
+
+.resume-item-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #111111;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.resume-item-date {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #777777;
+}
+
+.resume-item-sub {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #555555;
+  margin-top: 2px;
+  margin-bottom: 8px;
+  font-style: italic;
+}
+
+.resume-list {
+  padding-left: 20px;
+  margin-top: 5px;
+}
+
+.resume-list li {
+  margin-bottom: 6px;
+  color: #444444;
+}
+
+.resume-bullets {
+  list-style-type: disc;
+  padding-left: 20px;
+}
+
+.resume-bullets li {
+  margin-bottom: 6px;
+  color: #444444;
+}
+
+.resume-skills-list {
+  list-style-type: disc;
+  padding-left: 20px;
+}
+
+.resume-skills-list li {
+  margin-bottom: 8px;
+  color: #444444;
+}
+
+.resume-skills-list strong {
+  color: #111111;
+  font-weight: 600;
+}
+
+.references {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.referee {
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: #555555;
+}
+
+.referee strong {
+  font-size: 1.05rem;
+  color: #111111;
+}
+
+@media (max-width: 600px) {
+  .resume-item-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .resume-date {
+    margin-top: 4px;
+  }
+}

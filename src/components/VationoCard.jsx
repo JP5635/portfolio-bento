@@ -1,9 +1,11 @@
-import React, { useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 export default function VationoCard() {
   const canvasRef = useRef(null);
   const priceRef = useRef(null);
   const deltaRef = useRef(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -52,8 +54,8 @@ export default function VationoCard() {
 
       // Gradient fill
       const grd = ctx.createLinearGradient(0, pad.t, 0, h - pad.b);
-      grd.addColorStop(0, 'rgba(52,211,153,0.35)');
-      grd.addColorStop(1, 'rgba(52,211,153,0.01)');
+      grd.addColorStop(0, 'rgba(16,185,129,0.25)');
+      grd.addColorStop(1, 'rgba(16,185,129,0.01)');
 
       ctx.beginPath();
       ctx.moveTo(toX(0), toY(data[0]));
@@ -68,7 +70,7 @@ export default function VationoCard() {
       ctx.beginPath();
       ctx.moveTo(toX(0), toY(data[0]));
       data.forEach((v, i) => i > 0 && ctx.lineTo(toX(i), toY(v)));
-      ctx.strokeStyle = '#34d399';
+      ctx.strokeStyle = '#10b981';
       ctx.lineWidth = 2;
       ctx.lineJoin = 'round';
       ctx.stroke();
@@ -81,7 +83,7 @@ export default function VationoCard() {
       ctx.beginPath();
       ctx.moveTo(toX(0), toY(ma[0]));
       ma.forEach((v, i) => i > 0 && ctx.lineTo(toX(i), toY(v)));
-      ctx.strokeStyle = 'rgba(251,191,36,0.5)';
+      ctx.strokeStyle = 'rgba(217,119,6,0.6)';
       ctx.lineWidth = 1;
       ctx.setLineDash([4, 4]);
       ctx.stroke();
@@ -93,8 +95,8 @@ export default function VationoCard() {
       ctx.save();
       ctx.beginPath();
       ctx.arc(lastX, lastY, 4.5, 0, Math.PI * 2);
-      ctx.fillStyle = '#34d399';
-      ctx.shadowColor = '#34d399';
+      ctx.fillStyle = '#10b981';
+      ctx.shadowColor = '#10b981';
       ctx.shadowBlur = 14;
       ctx.fill();
       ctx.restore();
@@ -107,8 +109,8 @@ export default function VationoCard() {
       if (priceRef.current) priceRef.current.textContent = cur.toFixed(2);
       if (deltaRef.current) {
         deltaRef.current.textContent = `${pct >= 0 ? '+' : ''}${pct}%`;
-        deltaRef.current.style.color = delta >= 0 ? '#34d399' : '#f87171';
-        deltaRef.current.style.background = delta >= 0 ? 'rgba(52,211,153,.15)' : 'rgba(248,113,113,.15)';
+        deltaRef.current.style.color = delta >= 0 ? '#059669' : '#dc2626';
+        deltaRef.current.style.background = delta >= 0 ? 'rgba(5, 150, 105, 0.1)' : 'rgba(220, 38, 38, 0.1)';
       }
 
       offset += 0.1;
@@ -123,15 +125,19 @@ export default function VationoCard() {
   }, []);
 
   return (
-    <div id="vat" className="pebble">
-      <canvas ref={canvasRef} id="chart-canvas" className="fill-canvas" aria-hidden="true"></canvas>
-      <div className="price-hud" aria-live="polite">
-        <span ref={priceRef} id="price-val">—</span>
-        <span ref={deltaRef} id="price-delta" className="price-delta">+0.00%</span>
+    <div id="vat" className="featured-card" onClick={() => navigate('/vationo')}>
+      <div className="featured-thumb">
+        <canvas ref={canvasRef} id="chart-canvas" className="fill-canvas" aria-hidden="true"></canvas>
+        <div className="price-hud" aria-live="polite">
+          <span ref={priceRef} id="price-val">—</span>
+          <span ref={deltaRef} id="price-delta" className="price-delta">+0.00%</span>
+        </div>
+        <div className="featured-gradient" aria-hidden="true"></div>
       </div>
-      <div className="card-content bottom-overlay">
-        <h2 className="card-title">Vationo</h2>
-        <p className="card-sub">Transformer-based AI Quant</p>
+      <div className="featured-details">
+        <span className="featured-meta">Quant</span>
+        <h3 className="featured-title">Vationo</h3>
+        <p className="featured-desc">Systematic trading research and regime-switching portfolio allocation framework.</p>
       </div>
     </div>
   );

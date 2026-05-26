@@ -1,0 +1,419 @@
+/* ================================================
+   Spotify Episode Detail Aesthetic — BlogPost.css
+   ================================================ */
+
+.blog-post-container {
+  max-width: 900px;
+  margin: 40px auto;
+  background: #FFFFFF;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.05);
+  color: #333333;
+  font-family: 'Inter', system-ui, sans-serif;
+}
+
+/* Back navigation bar */
+.back-link-container {
+  padding: 24px 32px 0;
+  background: linear-gradient(to bottom, #242424, #1E1E1E);
+}
+
+.back-link {
+  display: inline-block;
+  color: #B3B3B3;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 0.85rem;
+  transition: color 0.2s;
+}
+
+.back-link:hover {
+  color: #FFFFFF;
+}
+
+/* Podcast Banner Header */
+.blog-header {
+  background: linear-gradient(to bottom, #1E1E1E 0%, #121212 100%);
+  padding: 32px 32px 48px;
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  color: #FFFFFF;
+}
+
+.blog-header-art {
+  width: 140px;
+  height: 140px;
+  border-radius: 12px;
+  flex-shrink: 0;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3rem;
+}
+
+/* Color gradients for different page arts */
+.art-rq  { background: linear-gradient(135deg, #FF9A9E 0%, #FECFEF 100%); }
+.art-vat { background: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%); }
+.art-sep { background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); }
+
+.blog-header-details {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.blog-header-tag {
+  font-size: 0.68rem;
+  font-weight: 800;
+  color: var(--primary);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.blog-title {
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: #FFFFFF;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+.blog-meta {
+  font-size: 0.82rem;
+  color: #B3B3B3;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.blog-meta-separator {
+  color: rgba(255,255,255,0.2);
+}
+
+/* Page Body content */
+.blog-content {
+  padding: 40px 32px;
+}
+
+.blog-section {
+  margin-bottom: 36px;
+}
+.blog-section:last-child {
+  margin-bottom: 0;
+}
+
+.blog-section h2 {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--text-main);
+  margin-bottom: 14px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  padding-bottom: 6px;
+}
+
+.blog-section p {
+  font-size: 0.95rem;
+  color: #444444;
+  line-height: 1.6;
+  margin-bottom: 12px;
+}
+
+.blog-section strong {
+  color: var(--primary);
+  font-weight: 700;
+}
+
+.blog-section em {
+  color: #818cf8;
+  font-style: normal;
+  font-weight: 700;
+}
+
+/* Episodes timeline list */
+.episode-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 18px;
+}
+
+.episode-card {
+  display: flex;
+  gap: 16px;
+  padding: 16px;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  border-radius: 10px;
+  background: #FAFAFA;
+  align-items: flex-start;
+}
+
+.episode-num {
+  font-size: 0.78rem;
+  font-weight: 800;
+  color: var(--primary);
+  background: rgba(232, 80, 83, 0.08);
+  padding: 4px 8px;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+
+.episode-details {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.episode-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.episode-desc {
+  font-size: 0.85rem;
+  color: var(--text-sub);
+  line-height: 1.45;
+}
+
+@media (max-width: 650px) {
+  .blog-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+    padding: 24px 20px 32px;
+  }
+  .blog-header-art {
+    width: 100px;
+    height: 100px;
+    font-size: 2.2rem;
+  }
+  .blog-title {
+    font-size: 1.6rem;
+  }
+  .blog-content {
+    padding: 24px 20px;
+  }
+  .back-link-container {
+    padding: 16px 20px 0;
+  }
+}
+
+/* ================================================
+   Split-Pane Layout & High-Density UI Components
+   ================================================ */
+
+.blog-post-container.split-layout {
+  max-width: 1100px;
+  width: 95%;
+  margin: 40px auto;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
+}
+
+.blog-split-layout {
+  display: grid;
+  grid-template-columns: 310px 1fr;
+  background: #FFFFFF;
+}
+
+/* Sidebar Column (Dark) */
+.blog-sidebar-col {
+  background: linear-gradient(to bottom, #1E1E1E 0%, #121212 100%);
+  color: #FFFFFF;
+  padding: 32px 24px;
+  border-right: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.blog-sidebar-sticky {
+  position: sticky;
+  top: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+/* Main Content Column (Light) */
+.blog-main-col {
+  padding: 40px 36px;
+  background: #FFFFFF;
+  color: #333333;
+  min-height: 80vh;
+}
+
+/* Sidebar Header Art & Meta */
+.sidebar-header-art {
+  width: 130px;
+  height: 130px;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3rem;
+  margin: 0 auto 16px;
+}
+
+.sidebar-show-details {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.sidebar-show-tag {
+  font-size: 0.65rem;
+  font-weight: 800;
+  color: var(--primary);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.sidebar-show-title {
+  font-size: 1.6rem;
+  font-weight: 900;
+  color: #FFFFFF;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+
+.sidebar-show-meta {
+  font-size: 0.8rem;
+  color: #B3B3B3;
+}
+
+/* Sidebar Sections */
+.sidebar-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.sidebar-section-title {
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: #8E8E8E;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding-bottom: 6px;
+  margin: 0;
+}
+
+/* Vertical Contacts list */
+.sidebar-contact-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sidebar-contact-item {
+  font-size: 0.78rem;
+  color: #B3B3B3;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sidebar-contact-item a {
+  color: #B3B3B3;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.sidebar-contact-item a:hover {
+  color: #FFFFFF;
+  text-decoration: underline;
+}
+
+/* Sidebar Referee Cards */
+.ref-card-sidebar {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 8px;
+  padding: 12px;
+  font-size: 0.75rem;
+  color: #B3B3B3;
+  line-height: 1.4;
+}
+
+.ref-card-sidebar h4 {
+  margin: 0 0 4px 0;
+  font-size: 0.82rem;
+  color: #FFFFFF;
+  font-weight: 700;
+}
+
+/* Technical Blog layout blocks */
+.tech-block-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 10px;
+  padding: 12px 14px;
+  background: #F8F9FA;
+  border-radius: 8px;
+  border-left: 3px solid var(--primary);
+}
+
+.tech-row {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.tech-label {
+  font-size: 0.68rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: var(--primary);
+  letter-spacing: 0.04em;
+}
+
+.tech-value {
+  font-size: 0.85rem;
+  color: #333333;
+  line-height: 1.5;
+}
+
+.tech-concept-tag {
+  font-size: 0.65rem;
+  font-weight: 700;
+  background: #E8E8E8;
+  color: #444444;
+  padding: 2px 6px;
+  border-radius: 4px;
+  display: inline-block;
+  margin-right: 6px;
+  vertical-align: middle;
+}
+
+/* Responsive Grid Split */
+@media (max-width: 820px) {
+  .blog-split-layout {
+    grid-template-columns: 1fr;
+  }
+  
+  .blog-sidebar-col {
+    border-right: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 24px 20px;
+  }
+
+  .blog-sidebar-sticky {
+    position: static;
+  }
+
+  .blog-main-col {
+    padding: 28px 20px;
+  }
+}
+

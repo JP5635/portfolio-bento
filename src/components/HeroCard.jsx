@@ -1,8 +1,10 @@
-import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 export default function HeroCard() {
+  const navigate = useNavigate();
+
   return (
-    <div id="hero" className="pebble">
+    <div id="hero" className="pebble" onClick={() => navigate('/resume')} style={{ cursor: 'pointer' }}>
       <div className="aurora" aria-hidden="true">
         <div className="a-blob a1"></div>
         <div className="a-blob a2"></div>
@@ -17,7 +19,6 @@ export default function HeroCard() {
           <span>LLM</span>
           <span>Deep Learning</span>
           <span>MLOps</span>
-          <span>BigQuery</span>
         </div>
       </div>
     </div>

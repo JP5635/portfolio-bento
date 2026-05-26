@@ -52,28 +52,32 @@ export default function InterviewEasyCard() {
   }, []);
 
   return (
-    <div id="iv" className="pebble">
-      <div className="chat-scene" aria-hidden="true">
-        {messages.map((msg, idx) => {
-          if (msg.type === 'typing') {
+    <div id="iv" className="featured-card">
+      <div className="featured-thumb">
+        <div className="chat-scene" aria-hidden="true">
+          {messages.map((msg, idx) => {
+            if (msg.type === 'typing') {
+              return (
+                <div key={`typing-${idx}`} className="typing-dots show">
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                </div>
+              );
+            }
             return (
-              <div key={`typing-${idx}`} className="typing-dots show">
-                <span></span>
-                <span></span>
-                <span></span>
+              <div key={msg.id || idx} className={`chat-bbl ${msg.type} show`}>
+                {msg.text}
               </div>
             );
-          }
-          return (
-            <div key={msg.id || idx} className={`chat-bbl ${msg.type} show`}>
-              {msg.text}
-            </div>
-          );
-        })}
+          })}
+        </div>
+        <div className="featured-gradient" aria-hidden="true"></div>
       </div>
-      <div className="card-content bottom-overlay">
-        <h2 className="card-title">Interview Easy</h2>
-        <p className="card-sub">AI Interview Coaching SaaS</p>
+      <div className="featured-details">
+        <span className="featured-meta">AI Agent</span>
+        <h3 className="featured-title">Interview Easy</h3>
+        <p className="featured-desc">AI Mock Interviewer generating custom STAR-format interview scenarios.</p>
       </div>
     </div>
   );

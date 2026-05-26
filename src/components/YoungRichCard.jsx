@@ -104,7 +104,7 @@ export default function YoungRichCard() {
       }
       ctx.restore();
 
-      ctx.fillStyle = 'rgba(255,255,255,0.7)';
+      ctx.fillStyle = 'rgba(18, 18, 18, 0.7)';
       ctx.font = '700 9px Inter, sans-serif';
       ctx.textAlign = 'center';
       ctx.fillText(label, x, y + 30);
@@ -149,7 +149,7 @@ export default function YoungRichCard() {
       }
       ctx.restore();
 
-      ctx.fillStyle = 'rgba(255,255,255,0.7)';
+      ctx.fillStyle = 'rgba(18, 18, 18, 0.7)';
       ctx.font = '700 9px Inter, sans-serif';
       ctx.textAlign = 'center';
       ctx.fillText('AI Engine', x, y + 32);
@@ -172,8 +172,8 @@ export default function YoungRichCard() {
         ctx.shadowColor = '#fbbf24';
         ctx.shadowBlur = 12;
       } else {
-        ctx.fillStyle = 'rgba(24, 12, 0, 0.82)';
-        ctx.strokeStyle = 'rgba(251, 191, 36, 0.55)';
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.95)';
+        ctx.strokeStyle = 'rgba(217, 119, 6, 0.65)';
         ctx.lineWidth = 1.5;
       }
       ctx.fill();
@@ -181,7 +181,7 @@ export default function YoungRichCard() {
       ctx.shadowBlur = 0;
 
       ctx.beginPath();
-      ctx.strokeStyle = isGlow ? 'rgba(251, 191, 36, 0.7)' : 'rgba(255, 255, 255, 0.22)';
+      ctx.strokeStyle = isGlow ? 'rgba(251, 191, 36, 0.7)' : 'rgba(217, 119, 6, 0.25)';
       ctx.lineWidth = 1.2;
       for (let offset = -4; offset <= 8; offset += 4) {
         ctx.moveTo(sx - 10, sy + offset);
@@ -202,12 +202,12 @@ export default function YoungRichCard() {
         ctx.lineTo(x + 17, y + 10 + 10);
         ctx.lineTo(x - 15, y + 10 + 16);
         ctx.closePath();
-        ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
+        ctx.strokeStyle = 'rgba(217, 119, 6, 0.2)';
         ctx.lineWidth = 1.5;
         ctx.stroke();
         ctx.restore();
 
-        ctx.fillStyle = 'rgba(255,255,255,0.4)';
+        ctx.fillStyle = 'rgba(18, 18, 18, 0.4)';
         ctx.font = '700 9px Inter, sans-serif';
         ctx.textAlign = 'center';
         ctx.fillText('Reports: 0', x, y + 32);
@@ -235,7 +235,7 @@ export default function YoungRichCard() {
         }
       }
 
-      ctx.fillStyle = 'rgba(255,255,255,0.8)';
+      ctx.fillStyle = 'rgba(18, 18, 18, 0.8)';
       ctx.font = '700 9.5px Inter, sans-serif';
       ctx.textAlign = 'center';
       ctx.fillText(`Reports: #${reportCount}`, x, y + 32);
@@ -272,7 +272,7 @@ export default function YoungRichCard() {
           midY,
           procX - 22,
           midY,
-          'rgba(255,255,255,0.06)'
+          'rgba(232, 80, 83, 0.08)'
         );
       });
       // Proc → Report pipe
@@ -285,7 +285,7 @@ export default function YoungRichCard() {
         midY,
         outX - 20,
         midY,
-        'rgba(255,255,255,0.06)'
+        'rgba(232, 80, 83, 0.08)'
       );
 
       // Source nodes
@@ -377,11 +377,15 @@ export default function YoungRichCard() {
   }, []);
 
   return (
-    <div id="yr" className="pebble">
-      <canvas ref={canvasRef} id="bar-canvas" className="fill-canvas" aria-hidden="true"></canvas>
-      <div className="card-content bottom-overlay">
-        <h2 className="card-title">Young &amp; Rich Report</h2>
-        <p className="card-sub">Investment Insight Reports</p>
+    <div id="yr" className="featured-card">
+      <div className="featured-thumb">
+        <canvas ref={canvasRef} id="yr-canvas" className="fill-canvas" aria-hidden="true"></canvas>
+        <div className="featured-gradient" aria-hidden="true"></div>
+      </div>
+      <div className="featured-details">
+        <span className="featured-meta">Algorithmic Trading</span>
+        <h3 className="featured-title">Young & Rich Report</h3>
+        <p className="featured-desc">Regime-switching asset allocation model on 20+ years of equity data.</p>
       </div>
     </div>
   );

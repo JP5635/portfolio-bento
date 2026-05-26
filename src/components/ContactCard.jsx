@@ -9,7 +9,7 @@ export default function ContactCard() {
         <p className="ct-desc">
           Interested in AI/ML solutions, quantitative research, or engineering collaborations? Let's connect.
         </p>
-        <a href="mailto:jonghopark@example.com" className="ct-btn">
+        <a href="mailto:pjh5635@gmail.com" className="ct-btn">
           <span>Get in touch</span>
           <svg
             width="14"
