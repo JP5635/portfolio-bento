@@ -1,4 +1,16 @@
-import React, { useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
+
+const C = {
+  src:    '#FF9900',   // AWS orange – data sources
+  engine: '#8B5CF6',   // violet    – AI processor
+  out:    '#10B981',   // emerald   – output
+};
+
+// Cubic bezier point evaluation
+function cubicAt(t, p0, p1, p2, p3) {
+  const m = 1 - t;
+  return m*m*m*p0 + 3*m*m*t*p1 + 3*m*t*t*p2 + t*t*t*p3;
+}
 
 export default function YoungRichCard() {
   const canvasRef = useRef(null);
@@ -6,7 +18,6 @@ export default function YoungRichCard() {
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-
     const dpr = window.devicePixelRatio || 1;
     const w = canvas.offsetWidth;
     const h = canvas.offsetHeight;
@@ -15,376 +26,271 @@ export default function YoungRichCard() {
     const ctx = canvas.getContext('2d');
     ctx.scale(dpr, dpr);
 
-    // Layout anchors
-    const srcX = w * 0.16;
-    const procX = w * 0.50;
-    const outX = w * 0.84;
-    const midY = h * 0.50;
+    const BW = 38, BH = 32; // service box size
+    const srcX = Math.round(w * 0.14);
+    const engX = Math.round(w * 0.52);
+    const outX = Math.round(w * 0.85);
+    const midY = Math.round(h * 0.50);
 
-    // Data sources: y position + label + color
     const sources = [
-      { y: h * 0.22, label: 'Markets', color: '#fbbf24' },
-      { y: h * 0.50, label: 'News', color: '#f87171' },
-      { y: h * 0.78, label: 'Econ', color: '#34d399' }
+      { y: Math.round(h * 0.21), label: 'Market Data', icon: 'chart' },
+      { y: midY,                 label: 'News Feed',   icon: 'feed'  },
+      { y: Math.round(h * 0.79), label: 'Econ Data',   icon: 'econ'  },
     ];
 
-    // Bezier cubic helper: point on curve at t
-    function bezier(t, p0x, p0y, p1x, p1y, p2x, p2y, p3x, p3y) {
-      const mt = 1 - t;
-      return {
-        x: mt * mt * mt * p0x + 3 * mt * mt * t * p1x + 3 * mt * t * t * p2x + t * t * t * p3x,
-        y: mt * mt * mt * p0y + 3 * mt * mt * t * p1y + 3 * mt * t * t * p2y + t * t * t * p3y
-      };
-    }
-
-    const packets = [];
-    let outGlow = 0; // 0->1 burst when a report is emitted
-    let reportCount = 0;
-    let landingAnim = 0; // 0 to 1 progress for landing report page
-
-    function spawnSourcePacket() {
-      const src = sources[Math.floor(Math.random() * sources.length)];
-      packets.push({
-        phase: 'src→proc',
-        color: src.color,
-        srcY: src.y,
-        t: 0,
-        speed: 0.010 + Math.random() * 0.007
+    // ── Minimal AWS-style icons ───────────────────────────────────────────────
+    function icon_chart(cx, cy, s) {
+      [[-.38,.42],[0,.70],[.38,1.0]].forEach(([dx, fh]) => {
+        ctx.fillRect(cx + dx*s - s*.1, cy + s*.45 - fh*s, s*.22, fh*s);
       });
     }
 
-    const intervalId = setInterval(spawnSourcePacket, 720);
-    spawnSourcePacket();
-    
-    // Stagger second packet
-    const initialT = setTimeout(spawnSourcePacket, 360);
+    function icon_feed(cx, cy, s) {
+      ctx.lineWidth = 1.2;
+      [[s*.80, -.24],[s*.56, .10],[s*.56, .44]].forEach(([lw, dy]) => {
+        ctx.beginPath();
+        ctx.moveTo(cx - lw/2, cy + dy*s);
+        ctx.lineTo(cx + lw/2, cy + dy*s);
+        ctx.stroke();
+      });
+    }
 
-    // Draw symbols for Sources
-    function drawSourceSymbol(x, y, type, color, label) {
+    function icon_econ(cx, cy, s) {
+      ctx.lineWidth = 1.3;
       ctx.beginPath();
-      ctx.roundRect(x - 22, y - 18, 44, 36, 6);
-      ctx.fillStyle = `${color}18`;
-      ctx.strokeStyle = `${color}66`;
-      ctx.lineWidth = 1.5;
+      ctx.moveTo(cx - s*.5, cy + s*.30);
+      ctx.lineTo(cx - s*.12,cy - s*.06);
+      ctx.lineTo(cx + s*.20,cy + s*.14);
+      ctx.lineTo(cx + s*.50,cy - s*.40);
+      ctx.stroke();
+      // arrowhead tip
+      ctx.beginPath();
+      ctx.moveTo(cx + s*.50, cy - s*.40);
+      ctx.lineTo(cx + s*.28, cy - s*.52);
+      ctx.lineTo(cx + s*.32, cy - s*.18);
+      ctx.closePath();
       ctx.fill();
+    }
+
+    function icon_brain(cx, cy, s) {
+      const pts = [[0,-s*.52],[-s*.46,s*.26],[s*.46,s*.26]];
+      ctx.lineWidth = 1;
+      // edges
+      for (let i = 0; i < 3; i++)
+        for (let j = i+1; j < 3; j++) {
+          ctx.beginPath();
+          ctx.moveTo(cx+pts[i][0], cy+pts[i][1]);
+          ctx.lineTo(cx+pts[j][0], cy+pts[j][1]);
+          ctx.stroke();
+        }
+      // nodes
+      pts.forEach(([dx, dy]) => {
+        ctx.beginPath();
+        ctx.arc(cx+dx, cy+dy, s*.155, 0, Math.PI*2);
+        ctx.fill();
+      });
+    }
+
+    function icon_doc(cx, cy, s) {
+      const x=cx-s*.40, y=cy-s*.58, fw=s*.80, fh=s*1.16, fold=s*.22;
+      ctx.lineWidth = 1.2;
+      ctx.beginPath();
+      ctx.moveTo(x+fold,y); ctx.lineTo(x+fw,y);
+      ctx.lineTo(x+fw,y+fh); ctx.lineTo(x,y+fh);
+      ctx.lineTo(x,y+fold); ctx.closePath();
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(x,y+fold); ctx.lineTo(x+fold,y+fold); ctx.lineTo(x+fold,y);
+      ctx.stroke();
+      for (let i = 0; i < 3; i++) {
+        ctx.beginPath();
+        ctx.moveTo(x+s*.14, y+s*.44+i*s*.27);
+        ctx.lineTo(x+fw-s*.10, y+s*.44+i*s*.27);
+        ctx.stroke();
+      }
+    }
+
+    const ICONS = { chart: icon_chart, feed: icon_feed, econ: icon_econ, brain: icon_brain, doc: icon_doc };
+
+    // ── Service box ───────────────────────────────────────────────────────────
+    function drawBox(cx, cy, label, bg, iconKey, glow = 0) {
+      const bx = cx - BW/2, by = cy - BH/2;
+
+      // Glow ring
+      if (glow > 0.01) {
+        ctx.beginPath();
+        ctx.arc(cx, cy, BW/2 + 4 + glow*5, 0, Math.PI*2);
+        ctx.strokeStyle = bg + Math.round(glow * 60).toString(16).padStart(2,'0');
+        ctx.lineWidth = 1;
+        ctx.stroke();
+      }
+
+      // Box fill
+      ctx.fillStyle = bg + 'CC';
+      ctx.roundRect(bx, by, BW, BH, 6);
+      ctx.fill();
+
+      // Box border
+      ctx.strokeStyle = 'rgba(255,255,255,0.22)';
+      ctx.lineWidth = 1;
+      ctx.roundRect(bx, by, BW, BH, 6);
       ctx.stroke();
 
+      // Icon
       ctx.save();
-      ctx.strokeStyle = color;
-      ctx.fillStyle = color;
-      ctx.lineWidth = 1.8;
+      ctx.fillStyle = 'rgba(255,255,255,0.94)';
+      ctx.strokeStyle = 'rgba(255,255,255,0.94)';
       ctx.lineCap = 'round';
       ctx.lineJoin = 'round';
-
-      if (type === 'Markets') {
-        ctx.beginPath();
-        ctx.moveTo(x - 12, y + 8);
-        ctx.lineTo(x - 5, y - 2);
-        ctx.lineTo(x + 2, y + 3);
-        ctx.lineTo(x + 12, y - 7);
-        ctx.stroke();
-        ctx.beginPath();
-        ctx.moveTo(x + 7, y - 7);
-        ctx.lineTo(x + 12, y - 7);
-        ctx.lineTo(x + 12, y - 2);
-        ctx.stroke();
-      } else if (type === 'News') {
-        ctx.fillStyle = `${color}cc`;
-        ctx.fillRect(x - 13, y - 10, 26, 4);
-        ctx.fillStyle = `${color}aa`;
-        ctx.fillRect(x - 13, y - 2, 11, 2);
-        ctx.fillRect(x - 13, y + 2, 11, 2);
-        ctx.fillRect(x - 13, y + 6, 26, 2);
-        ctx.fillRect(x + 2, y - 2, 11, 6);
-      } else if (type === 'Econ') {
-        ctx.fillStyle = `${color}cc`;
-        ctx.fillRect(x - 12, y + 8 - 8, 6, 8);
-        ctx.fillRect(x - 3, y + 8 - 14, 6, 14);
-        ctx.fillRect(x + 6, y + 8 - 20, 6, 20);
-      }
+      ICONS[iconKey](cx, cy, BW * 0.27);
       ctx.restore();
 
-      ctx.fillStyle = 'rgba(18, 18, 18, 0.7)';
-      ctx.font = '700 9px Inter, sans-serif';
+      // Label
+      ctx.font = '600 6.5px Nunito, sans-serif';
       ctx.textAlign = 'center';
-      ctx.fillText(label, x, y + 30);
+      ctx.fillStyle = 'rgba(255,255,255,0.60)';
+      ctx.fillText(label, cx, by + BH + 9);
     }
 
-    // Draw Processor core
-    function drawProcessorSymbol(x, y) {
-      const procPulse = 0.5 + 0.5 * Math.sin(Date.now() / 600);
-      ctx.beginPath();
-      ctx.arc(x, y, 26 + procPulse * 3, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(139,92,246,${0.06 + procPulse * 0.04})`;
-      ctx.fill();
-
-      ctx.beginPath();
-      ctx.roundRect(x - 20, y - 20, 40, 40, 6);
-      ctx.fillStyle = 'rgba(109,40,217,0.18)';
-      ctx.strokeStyle = 'rgba(167,139,250,0.7)';
-      ctx.lineWidth = 1.5;
-      ctx.fill();
-      ctx.stroke();
-
-      ctx.fillStyle = 'rgba(167,139,250,0.8)';
-      for (let i = -12; i <= 12; i += 8) {
-        ctx.fillRect(x + i - 1.5, y - 24, 3, 4);
-        ctx.fillRect(x + i - 1.5, y + 20, 3, 4);
-        ctx.fillRect(x - 24, y + i - 1.5, 4, 3);
-        ctx.fillRect(x + 20, y + i - 1.5, 4, 3);
-      }
-
-      const rotAngle = Date.now() / 500;
-      ctx.save();
-      ctx.translate(x, y);
-      ctx.rotate(rotAngle);
-      ctx.strokeStyle = '#a78bfa';
-      ctx.lineWidth = 2.5;
-      ctx.beginPath();
-      ctx.arc(0, 0, 10, 0, Math.PI * 2);
-      ctx.stroke();
-      ctx.fillStyle = '#c4b5fd';
-      for (let a = 0; a < Math.PI * 2; a += Math.PI / 3) {
-        ctx.fillRect(Math.cos(a) * 9 - 1.5, Math.sin(a) * 9 - 1.5, 3, 3);
-      }
-      ctx.restore();
-
-      ctx.fillStyle = 'rgba(18, 18, 18, 0.7)';
-      ctx.font = '700 9px Inter, sans-serif';
-      ctx.textAlign = 'center';
-      ctx.fillText('AI Engine', x, y + 32);
+    // ── Bezier control points: src → engine ──────────────────────────────────
+    function getCPs(srcY) {
+      const x0 = srcX + BW/2,  y0 = srcY;
+      const x3 = engX - BW/2,  y3 = midY;
+      const cpx = (x0 + x3) / 2;
+      return [x0, y0, cpx, y0, cpx, y3, x3, y3];
     }
 
-    // Draw Tilted Page (Report Sheet)
-    function drawReportSheet(sx, sy, isGlow = false) {
-      ctx.save();
+    // ── Dashed path line ──────────────────────────────────────────────────────
+    function drawPipe(x0, y0, x1, y1, x2, y2, x3, y3) {
+      ctx.setLineDash([3, 3]);
+      ctx.strokeStyle = 'rgba(255,255,255,0.12)';
+      ctx.lineWidth = 1;
       ctx.beginPath();
-      ctx.moveTo(sx - 17, sy - 8);
-      ctx.lineTo(sx + 15, sy - 14);
-      ctx.lineTo(sx + 17, sy + 10);
-      ctx.lineTo(sx - 15, sy + 16);
+      ctx.moveTo(x0, y0);
+      ctx.bezierCurveTo(x1, y1, x2, y2, x3, y3);
+      ctx.stroke();
+      ctx.setLineDash([]);
+    }
+
+    // Small arrowhead pointing right at (tx, ty)
+    function arrowRight(tx, ty, color) {
+      const s = 4;
+      ctx.fillStyle = color;
+      ctx.beginPath();
+      ctx.moveTo(tx,     ty);
+      ctx.lineTo(tx - s, ty - s*.5);
+      ctx.lineTo(tx - s, ty + s*.5);
       ctx.closePath();
-
-      if (isGlow) {
-        ctx.fillStyle = 'rgba(251, 191, 36, 0.35)';
-        ctx.strokeStyle = 'rgba(251, 191, 36, 0.95)';
-        ctx.lineWidth = 2;
-        ctx.shadowColor = '#fbbf24';
-        ctx.shadowBlur = 12;
-      } else {
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.95)';
-        ctx.strokeStyle = 'rgba(217, 119, 6, 0.65)';
-        ctx.lineWidth = 1.5;
-      }
       ctx.fill();
-      ctx.stroke();
-      ctx.shadowBlur = 0;
-
-      ctx.beginPath();
-      ctx.strokeStyle = isGlow ? 'rgba(251, 191, 36, 0.7)' : 'rgba(217, 119, 6, 0.25)';
-      ctx.lineWidth = 1.2;
-      for (let offset = -4; offset <= 8; offset += 4) {
-        ctx.moveTo(sx - 10, sy + offset);
-        ctx.lineTo(sx + 10, sy + offset - 4);
-      }
-      ctx.stroke();
-      ctx.restore();
     }
 
-    // Draw Stack of Reports
-    function drawReportStack(x, y) {
-      if (reportCount === 0) {
-        ctx.save();
-        ctx.beginPath();
-        ctx.setLineDash([4, 4]);
-        ctx.moveTo(x - 17, y + 10 - 8);
-        ctx.lineTo(x + 15, y + 10 - 14);
-        ctx.lineTo(x + 17, y + 10 + 10);
-        ctx.lineTo(x - 15, y + 10 + 16);
-        ctx.closePath();
-        ctx.strokeStyle = 'rgba(217, 119, 6, 0.2)';
-        ctx.lineWidth = 1.5;
-        ctx.stroke();
-        ctx.restore();
+    // ── Packet system ─────────────────────────────────────────────────────────
+    const packets = [];
+    let reportCount = 0;
+    let outGlow = 0;
+    let engGlow = 0;
 
-        ctx.fillStyle = 'rgba(18, 18, 18, 0.4)';
-        ctx.font = '700 9px Inter, sans-serif';
-        ctx.textAlign = 'center';
-        ctx.fillText('Reports: 0', x, y + 32);
-        return;
-      }
-
-      const numBaseSheets = Math.min(6, reportCount);
-
-      for (let j = 0; j < numBaseSheets; j++) {
-        const isTop = j === numBaseSheets - 1;
-        const sx = x - j * 1.8;
-        const sy = y + 10 - j * 2.8;
-
-        if (isTop && landingAnim > 0.001) {
-          const slideY = sy - landingAnim * 36;
-          ctx.save();
-          ctx.translate(sx, slideY);
-          const squash = 1 + Math.sin(landingAnim * Math.PI) * 0.1;
-          const stretch = 1 - Math.sin(landingAnim * Math.PI) * 0.06;
-          ctx.scale(squash, stretch);
-          drawReportSheet(0, 0, true);
-          ctx.restore();
-        } else {
-          drawReportSheet(sx, sy, isTop && outGlow > 0.1);
-        }
-      }
-
-      ctx.fillStyle = 'rgba(18, 18, 18, 0.8)';
-      ctx.font = '700 9.5px Inter, sans-serif';
-      ctx.textAlign = 'center';
-      ctx.fillText(`Reports: #${reportCount}`, x, y + 32);
+    function spawnSrc() {
+      const src = sources[Math.floor(Math.random() * sources.length)];
+      packets.push({
+        phase: 'src',
+        color: C.src,
+        CPs: getCPs(src.y),
+        t: 0,
+        speed: 0.010 + Math.random() * 0.007,
+      });
     }
 
-    // Draw bezier pipe (background tube)
-    function drawPipe(p0x, p0y, p1x, p1y, p2x, p2y, p3x, p3y, color) {
-      ctx.beginPath();
-      ctx.moveTo(p0x, p0y);
-      ctx.bezierCurveTo(p1x, p1y, p2x, p2y, p3x, p3y);
-      ctx.strokeStyle = color;
-      ctx.lineWidth = 2.5;
-      ctx.lineCap = 'round';
-      ctx.stroke();
-    }
+    const intervalId = setInterval(spawnSrc, 680);
+    spawnSrc();
 
-    let animationFrameId;
+    let animId;
     function draw() {
       ctx.clearRect(0, 0, w, h);
 
-      if (landingAnim > 0) {
-        landingAnim = Math.max(0, landingAnim - 0.04);
-      }
-
-      // Background pipe tubes
+      // Background pipes
       sources.forEach(src => {
-        const cp = (srcX + procX) / 2;
-        drawPipe(
-          srcX + 22,
-          src.y,
-          cp,
-          src.y,
-          cp,
-          midY,
-          procX - 22,
-          midY,
-          'rgba(232, 80, 83, 0.08)'
-        );
+        const [x0,y0,x1,y1,x2,y2,x3,y3] = getCPs(src.y);
+        drawPipe(x0,y0,x1,y1,x2,y2,x3,y3);
       });
-      // Proc → Report pipe
-      drawPipe(
-        procX + 22,
-        midY,
-        (procX + outX) / 2,
-        midY,
-        (procX + outX) / 2,
-        midY,
-        outX - 20,
-        midY,
-        'rgba(232, 80, 83, 0.08)'
-      );
+      drawPipe(engX+BW/2, midY, (engX+outX)/2, midY, (engX+outX)/2, midY, outX-BW/2, midY);
 
-      // Source nodes
-      sources.forEach(src => {
-        drawSourceSymbol(srcX, src.y, src.label, src.color, src.label);
-      });
+      // Arrowheads at destinations
+      arrowRight(engX - BW/2, midY, 'rgba(255,255,255,0.20)');
+      arrowRight(outX - BW/2, midY, 'rgba(255,255,255,0.20)');
 
-      // AI Process node
-      drawProcessorSymbol(procX, midY);
+      // Glow decay
+      engGlow = Math.max(0, engGlow - 0.025);
+      outGlow = Math.max(0, outGlow - 0.020);
 
-      // Report output node
-      if (outGlow > 0) {
-        outGlow = Math.max(0, outGlow - 0.025);
-      }
-      drawReportStack(outX, midY);
+      // Service boxes
+      sources.forEach(src => drawBox(srcX, src.y, src.label, C.src, src.icon));
+      drawBox(engX, midY, 'AI Engine', C.engine, 'brain', engGlow);
+      drawBox(outX, midY, 'Reports',   C.out,    'doc',   outGlow);
 
-      // Update + draw packets
+      // Report counter
+      ctx.font = '700 8px Nunito, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillStyle = outGlow > 0.1
+        ? `rgba(16,185,129,${0.65 + outGlow * 0.35})`
+        : 'rgba(255,255,255,0.36)';
+      ctx.fillText(`#${reportCount}`, outX, midY + BH/2 + 18);
+
+      // Update & draw packets
       for (let i = packets.length - 1; i >= 0; i--) {
         const p = packets[i];
         p.t = Math.min(1, p.t + p.speed);
 
         let px, py;
-
-        if (p.phase === 'src→proc') {
-          const cpx = (srcX + procX) / 2;
-          const pt = bezier(p.t, srcX + 22, p.srcY, cpx, p.srcY, cpx, midY, procX - 22, midY);
-          px = pt.x;
-          py = pt.y;
+        if (p.phase === 'src') {
+          const [x0,y0,x1,y1,x2,y2,x3,y3] = p.CPs;
+          px = cubicAt(p.t, x0, x1, x2, x3);
+          py = cubicAt(p.t, y0, y1, y2, y3);
         } else {
-          px = procX + 22 + (outX - 20 - (procX + 22)) * p.t;
+          px = (engX+BW/2) + ((outX-BW/2)-(engX+BW/2)) * p.t;
           py = midY;
         }
 
-        ctx.save();
-        ctx.beginPath();
-        ctx.arc(px, py, 4.5, 0, Math.PI * 2);
+        // Glowing square packet
+        const ps = 3.5;
         ctx.fillStyle = p.color;
         ctx.shadowColor = p.color;
-        ctx.shadowBlur = 14;
-        ctx.fill();
-        ctx.restore();
-
-        const trailT = Math.max(0, p.t - 0.06);
-        let tx, ty;
-        if (p.phase === 'src→proc') {
-          const cpx = (srcX + procX) / 2;
-          const tp = bezier(trailT, srcX + 22, p.srcY, cpx, p.srcY, cpx, midY, procX - 22, midY);
-          tx = tp.x;
-          ty = tp.y;
-        } else {
-          tx = procX + 22 + (outX - 20 - (procX + 22)) * trailT;
-          ty = midY;
-        }
-        ctx.beginPath();
-        ctx.arc(tx, ty, 2.5, 0, Math.PI * 2);
-        ctx.fillStyle = `${p.color}55`;
-        ctx.fill();
+        ctx.shadowBlur = 9;
+        ctx.fillRect(px - ps/2, py - ps/2, ps, ps);
+        ctx.shadowBlur = 0;
 
         if (p.t >= 1) {
-          if (p.phase === 'src→proc') {
-            // Emit a proc→report packet with 40% probability (batching)
-            if (Math.random() < 0.4) {
-              packets.push({
-                phase: 'proc→report',
-                color: '#a78bfa',
-                t: 0,
-                speed: 0.014 + Math.random() * 0.006
-              });
+          if (p.phase === 'src') {
+            engGlow = 1;
+            if (Math.random() < 0.40) {
+              packets.push({ phase: 'out', color: C.out, t: 0, speed: 0.013 + Math.random()*0.007 });
             }
           } else {
             outGlow = 1;
-            reportCount = Math.min(99, reportCount + 1);
-            landingAnim = 1.0;
+            reportCount = Math.min(999, reportCount + 1);
           }
           packets.splice(i, 1);
         }
       }
 
-      animationFrameId = requestAnimationFrame(draw);
+      animId = requestAnimationFrame(draw);
     }
 
     draw();
-
     return () => {
-      cancelAnimationFrame(animationFrameId);
+      cancelAnimationFrame(animId);
       clearInterval(intervalId);
-      clearTimeout(initialT);
     };
   }, []);
 
   return (
     <div id="yr" className="featured-card">
       <div className="featured-thumb">
-        <canvas ref={canvasRef} id="yr-canvas" className="fill-canvas" aria-hidden="true"></canvas>
-        <div className="featured-gradient" aria-hidden="true"></div>
+        <canvas ref={canvasRef} className="fill-canvas" aria-hidden="true" />
       </div>
       <div className="featured-details">
         <span className="featured-meta">Algorithmic Trading</span>
-        <h3 className="featured-title">Young & Rich Report</h3>
+        <h3 className="featured-title">Young &amp; Rich Report</h3>
         <p className="featured-desc">Regime-switching asset allocation model on 20+ years of equity data.</p>
       </div>
     </div>
