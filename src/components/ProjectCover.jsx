@@ -98,6 +98,31 @@ function Spatial() {
   </>;
 }
 
+function DinoQ() {
+  return <>
+    <rect width="480" height="286" fill="#f0f3f7" />
+    <text x="25" y="31" fill="#647180" fontSize="10" letterSpacing="1">TABULAR Q-LEARNING / LIVE</text>
+    <text x="25" y="66" fill="#202832" fontSize="22" fontWeight="650">Learn by acting.</text>
+    <g transform="translate(26 92)">
+      <rect width="428" height="112" rx="8" fill="#fff" stroke="#d7dee6" />
+      <path d="M18 87h392" stroke="#abb5c0" />
+      <path d="M135 87l13-31 13 31M281 87l13-31 13 31" fill="#17191c" />
+      <g transform="translate(347 50)" fill="#17191c">
+        <rect x="0" y="12" width="32" height="28"/><rect x="18" y="0" width="35" height="25"/><rect x="47" y="7" width="12" height="7"/>
+        <rect x="4" y="36" width="9" height="20"/><rect x="25" y="36" width="9" height="20"/><rect x="26" y="7" width="5" height="5" fill="#fff"/>
+      </g>
+      <path d="M383 82l14-11 14 11-6 6h-16Z" fill="#924038" /><path d="M389 87l-8 8" stroke="#d6aa72" strokeWidth="4" />
+    </g>
+    <g transform="translate(26 227)" fontSize="12">
+      <text fill="#5b6876">Q(s, ·)</text>
+      <rect x="61" y="-16" width="92" height="25" rx="5" fill="#e5edf7"/><text x="72" y="1" fill="#34506f">Forward +0.42</text>
+      <rect x="161" y="-16" width="76" height="25" rx="5" fill="#eef0f3"/><text x="172" y="1" fill="#596675">Turn −0.08</text>
+      <rect x="245" y="-16" width="84" height="25" rx="5" fill="#e6f0ea"/><text x="256" y="1" fill="#35664f">Jump +0.61</text>
+    </g>
+    <text x="26" y="269" fill="#8a949f" fontSize="9">Observe → choose → act → reward → update</text>
+  </>;
+}
+
 const scenes = {
   researchq: [Retrieval, 'Retrieval workflow', 'Hover to trace'],
   sepsis: [Clinical, 'Model explanation', 'Hover to trace'],
@@ -105,6 +130,7 @@ const scenes = {
   'writing-rag': [Chunking, 'Hierarchical chunking', 'Hover to trace'],
   'writing-ml': [Additive, 'Additive modelling', 'Hover to trace'],
   'writing-data': [Spatial, 'Spatial clustering', 'Hover to filter'],
+  'writing-dino-q-learning': [DinoQ, 'Q-learning loop', 'Read the model notes'],
 };
 
 export default function ProjectCover({ id }) {

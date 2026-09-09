@@ -1,0 +1,59 @@
+.header-dino-lane { position: relative; margin: 0 10px; height: 100px; pointer-events: none; }
+.header-dino-lane { overflow: hidden; }
+.dino-ground { position: absolute; left: 0; right: 0; bottom: 0; height: 1px; background: #a8b2bd80; }
+.dino-ground::before, .dino-ground::after { content: ''; position: absolute; bottom: 0; width: 2px; height: 25px; background: #81909e; }
+.dino-ground::before { left: 8px; }
+.dino-ground::after { right: 8px; }
+.dino-episode, .dino-score { position: absolute; top: 5px; z-index: 2; padding: 2px 5px; border-radius: 4px; background: rgba(250,251,253,.82); color: #343e49; font-size: 11px; font-weight: 600; font-variant-numeric: tabular-nums; line-height: 1.2; }
+.dino-episode { left: 8px; }
+.dino-live-label { position: absolute; top: 24px; left: 13px; z-index: 2; color: #7a8590; font-size: 9px; font-weight: 600; letter-spacing: .03em; text-transform: uppercase; }
+.dino-score { right: 8px; }
+.dino-q-values { position: absolute; top: 7px; left: 50%; z-index: 2; transform: translateX(-50%); padding: 1px 6px; border-radius: 4px; background: rgba(250,251,253,.76); color: #66717d; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 10px; font-variant-numeric: tabular-nums; line-height: 1.3; white-space: nowrap; }
+.dino-vision { position: absolute; top: 3px; bottom: 0; background: #77a89720; border: 1px dashed #77a89760; }
+.dino-obstacle {
+  position: absolute;
+  bottom: 1px;
+  width: 13px;
+  height: 17px;
+  background: #111;
+  clip-path: polygon(50% 0, 100% 100%, 0 100%);
+}
+.dino-goal { position: absolute; bottom: 2px; display: grid; place-items: center; width: 24px; height: 24px; }
+.dino-goal img { display: block; width: 100%; height: 100%; object-fit: contain; image-rendering: pixelated; pointer-events: none; user-select: none; }
+.header-dino-lane[data-collision=true] { background: #c9563815; }
+.dino-hop { display: block; }
+.dino-hop.is-jumping { animation: dino-hop .28s ease-out; }
+@keyframes dino-hop { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-14px); } }
+.explorer .header-dino { display: block; width: 42px; height: 42px; padding: 0; border: 0; border-radius: 3px; background: transparent; pointer-events: auto; cursor: pointer; }
+.explorer .header-dino { position: absolute; bottom: 0; transition: transform .28s linear; }
+.header-dino-sprite { display: block; width: 38px; height: 40px; margin: 1px auto 0; overflow: visible; }
+.dino-bubble-anchor { position: absolute; bottom: 45px; left: 50%; z-index: 5; transform: translateX(-50%); pointer-events: none; }
+.dino-bubble-anchor.is-left { left: 0; transform: none; }
+.dino-bubble-anchor.is-right { right: 0; left: auto; transform: none; }
+.dino-action-bubble { position: relative; display: block; min-width: 38px; padding: 3px 6px; border: 1px solid #cfd6dd; border-radius: 7px; background: rgba(255,255,255,.95); box-shadow: 0 3px 10px rgba(35,46,58,.09); color: #3c4752; font-size: 8px; font-weight: 700; line-height: 1.15; letter-spacing: .02em; text-align: center; white-space: nowrap; }
+.dino-action-bubble::after { content: ''; position: absolute; top: 100%; left: 50%; width: 6px; height: 6px; transform: translate(-50%,-3px) rotate(45deg); border-right: 1px solid #cfd6dd; border-bottom: 1px solid #cfd6dd; background: rgba(255,255,255,.95); }
+.dino-action-bubble.is-jumping { animation: dino-bubble-hop .28s ease-out; }
+@keyframes dino-bubble-hop { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-14px); } }
+.header-dino-frames { position: relative; display: block; width: 38px; height: 40px; }
+.header-dino-frame { position: absolute; inset: 0; display: block; width: 100%; height: 100%; object-fit: contain; image-rendering: pixelated; pointer-events: none; user-select: none; }
+.header-dino-frame { opacity: 0; animation-duration: .4s; animation-timing-function: steps(1, end); animation-iteration-count: infinite; }
+.header-dino-frame.frame-1 { animation-name: header-dino-step-1; }
+.header-dino-frame.frame-2 { animation-name: header-dino-step-2; }
+.header-dino-frame.frame-3 { animation-name: header-dino-step-3; }
+.header-dino-frame.frame-4 { animation-name: header-dino-step-4; }
+.header-dino-lane[data-sleeping=true] .header-dino-frame { animation-play-state: paused; }
+@keyframes header-dino-step-1 { 0%, 24.99% { opacity: 1; } 25%, 100% { opacity: 0; } }
+@keyframes header-dino-step-2 { 0%, 24.99% { opacity: 0; } 25%, 49.99% { opacity: 1; } 50%, 100% { opacity: 0; } }
+@keyframes header-dino-step-3 { 0%, 49.99% { opacity: 0; } 50%, 74.99% { opacity: 1; } 75%, 100% { opacity: 0; } }
+@keyframes header-dino-step-4 { 0%, 74.99% { opacity: 0; } 75%, 100% { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) {
+  .header-dino-frame { animation: none; }
+  .header-dino-frame.frame-1 { opacity: 1; }
+  .dino-hop.is-jumping { animation: none; }
+  .dino-action-bubble.is-jumping { animation: none; }
+  .explorer .header-dino { transition: none; }
+}
+@media (max-width: 430px) {
+  .dino-q-values { top: 25px; }
+  .dino-live-label { display: none; }
+}

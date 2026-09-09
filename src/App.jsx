@@ -4,6 +4,7 @@ import ResearchDetail from './pages/ResearchDetail';
 import ResumePage from './pages/ResumePage';
 import DataStackPost from './pages/DataStackPost';
 import MLStackPost from './pages/MLStackPost';
+import DinoQPost from './pages/DinoQPost';
 
 import PortfolioExplorer, { WritingDetail } from './pages/PortfolioExplorer';
 import { Link } from 'react-router-dom';
@@ -19,6 +20,7 @@ export default function App() {
         <Route path="research/sepsis" element={<ResearchDetail />} />
         <Route path="datastack" element={<DataStackPost />} />
         <Route path="mlstack" element={<MLStackPost />} />
+        <Route path="writing/dino-q-learning" element={<DinoQPost />} />
         <Route path="writing/:slug" element={<WritingDetail />} />
         <Route path="*" element={<main className="project-detail"><h1>Page not found</h1><p>This page is not available.</p><Link className="detail-back" to="/">← Back to work</Link></main>} />
       </Route>

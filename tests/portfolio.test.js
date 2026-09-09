@@ -8,7 +8,7 @@ import { existsSync, readFileSync } from 'node:fs';
 
 test('only the requested collections appear, without experience posts', () => {
   assert.deepEqual(collections, ['All', 'Projects', 'Research', 'Blog']);
-  assert.equal(posts.length, 7);
+  assert.equal(posts.length, 8);
   assert.equal(posts.some(item => item.collection === 'Experience'), false);
   assert.equal(new Set(items.map(item => item.id)).size, items.length);
 });
@@ -46,10 +46,13 @@ test('related content works both ways without broken or self links', () => {
   assert.ok(getRelatedItems('researchq').some(item => item.path === '/resume'));
 });
 
-test('unwritten articles and the research project are not represented as publications', () => {
-  assert.ok(posts.filter(item => item.collection === 'Blog').every(item => item.publicationStatus === 'planned' && item.status === 'Proposed article'));
+test('planned articles and the published Q-learning note are labelled honestly', () => {
+  const blogs = posts.filter(item => item.collection === 'Blog');
+  assert.equal(blogs.filter(item => item.publicationStatus === 'planned').length, 3);
+  assert.ok(blogs.filter(item => item.publicationStatus === 'planned').every(item => item.status === 'Proposed article'));
+  assert.equal(blogs.find(item => item.id === 'writing-dino-q-learning').publicationStatus, 'published');
+  assert.equal(blogs.find(item => item.id === 'writing-dino-q-learning').path, '/writing/dino-q-learning');
   assert.equal(items.find(item => item.id === 'sepsis-research').status, 'Course report');
-  assert.equal(posts.some(item => item.publicationStatus === 'published'), false);
 });
 
 test('research has an independent detail route and remains connected to the project', () => {

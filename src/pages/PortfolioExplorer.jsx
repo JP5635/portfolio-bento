@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Link, Outlet, useLocation, useNavigate, useParams } from 'react-router-dom';
 import './PortfolioExplorer.css';
 import ProjectCover from '../components/ProjectCover';
+import HeaderDino from '../components/HeaderDino';
 
 import { collections, posts, items, getRouteItem } from '../data/portfolio';
 import RelatedContent from '../components/RelatedContent';
@@ -63,10 +64,11 @@ export default function PortfolioExplorer() {
           </nav>
           <div className="explorer-about"><span>Melbourne, Australia</span></div>
         </aside>
+        <HeaderDino active={isList} />
         {isList ? <main id="portfolio-content" tabIndex={-1} className="explorer-main" aria-label="Portfolio items">
           <div className="explorer-toolbar">
-            <div><span>{collection}</span><small>{visible.length} items</small></div>
             <label className="explorer-search"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5" /><path d="m13 13 4 4" /></svg><input aria-label="Search portfolio" placeholder="Search…" value={query} onChange={event => setQuery(event.target.value)} /></label>
+            <div className="explorer-collection"><span>{collection}</span><small>{visible.length} items</small></div>
             <button className="explorer-sort" onClick={() => setAscending(!ascending)} aria-pressed={ascending} aria-label="Sort by title">A–Z {ascending ? '↑' : '↕'}</button>
             <div className="explorer-view-switch" role="group" aria-label="View mode">
               <button type="button" aria-label="List view" title="List view" aria-pressed={view === 'list'} onClick={() => setView('list')}><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.4" aria-hidden="true"><path d="M7 5h10M7 10h10M7 15h10M3 5h1M3 10h1M3 15h1" /></svg></button>
