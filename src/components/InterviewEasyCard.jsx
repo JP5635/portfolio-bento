@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 
 const MESSAGES_PRESET = [
   { id: 1, type: 'user', text: 'Help me prep for my interview 👋' },
@@ -23,7 +23,7 @@ export default function InterviewEasyCard() {
 
       let accumulatedDelay = 300;
 
-      MESSAGES_PRESET.forEach((msg, idx) => {
+      MESSAGES_PRESET.forEach((msg) => {
         const addT = setTimeout(() => {
           if (!active) return;
           setMessages(prev => {

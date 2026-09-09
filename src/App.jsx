@@ -1,50 +1,27 @@
-import { Routes, Route } from 'react-router-dom';
-import HeroCard from './components/HeroCard';
-import ResearchQCard from './components/ResearchQCard';
-import InterviewEasyCard from './components/InterviewEasyCard';
-import VationoCard from './components/VationoCard';
-import YoungRichCard from './components/YoungRichCard';
-import SepsisCard from './components/SepsisCard';
-import DataStackCard from './components/DataStackCard';
-import PositionsCard from './components/PositionsCard';
-import MLStackCard from './components/MLStackCard';
-import ContactCard from './components/ContactCard';
-import ResearchQPost from './pages/ResearchQPost';
+import { Route, Routes } from 'react-router-dom';
+import ProjectDetail from './pages/ProjectDetail';
+import ResearchDetail from './pages/ResearchDetail';
 import ResumePage from './pages/ResumePage';
-import VationoPost from './pages/VationoPost';
-import SepsisPost from './pages/SepsisPost';
 import DataStackPost from './pages/DataStackPost';
 import MLStackPost from './pages/MLStackPost';
 
-function BentoGrid() {
-  return (
-    <main className="bento" id="bento-grid">
-      <ResearchQCard />
-      <HeroCard />
-      <InterviewEasyCard />
-      <VationoCard />
-      <YoungRichCard />
-      <SepsisCard />
-      <DataStackCard />
-      <PositionsCard />
-      <MLStackCard />
-      <ContactCard />
-    </main>
-  );
-}
+import PortfolioExplorer, { WritingDetail } from './pages/PortfolioExplorer';
+import { Link } from 'react-router-dom';
 
 export default function App() {
   return (
     <Routes>
-      <Route path="/" element={<BentoGrid />} />
-      <Route path="/researchq" element={<ResearchQPost />} />
-      <Route path="/resume" element={<ResumePage />} />
-      <Route path="/vationo" element={<VationoPost />} />
-      <Route path="/sepsis" element={<SepsisPost />} />
-      <Route path="/datastack" element={<DataStackPost />} />
-      <Route path="/mlstack" element={<MLStackPost />} />
+      <Route path="/" element={<PortfolioExplorer />}>
+        <Route path="researchq" element={<ProjectDetail id="researchq" />} />
+        <Route path="resume" element={<ResumePage embedded />} />
+        <Route path="vationo" element={<ProjectDetail id="vationo" />} />
+        <Route path="sepsis" element={<ProjectDetail id="sepsis" />} />
+        <Route path="research/sepsis" element={<ResearchDetail />} />
+        <Route path="datastack" element={<DataStackPost />} />
+        <Route path="mlstack" element={<MLStackPost />} />
+        <Route path="writing/:slug" element={<WritingDetail />} />
+        <Route path="*" element={<main className="project-detail"><h1>Page not found</h1><p>This page is not available.</p><Link className="detail-back" to="/">← Back to work</Link></main>} />
+      </Route>
     </Routes>
   );
 }
-
-

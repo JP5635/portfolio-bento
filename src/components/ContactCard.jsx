@@ -1,5 +1,3 @@
-import React from 'react';
-
 export default function ContactCard() {
   return (
     <div id="ct" className="pebble">

@@ -1,143 +1,64 @@
-.resume-container {
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 60px 20px;
-  color: #333333;
-  font-family: 'Inter', 'Pretendard', sans-serif;
-  line-height: 1.6;
-  background: #F9F9F9;
-  min-height: 100vh;
+.cv-page {
+  background: radial-gradient(ellipse at top left, #eaf0f9, transparent 650px), #f6f7f9;
+  color: #272a30;
+  min-height: 100dvh;
+  font: 14px/1.65 -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif;
 }
-
-.resume-header {
-  margin-bottom: 40px;
-  text-align: left;
+.cv-page a { color: inherit; text-decoration: none; }
+.cv-page a:hover { color: #0672d8; }
+.cv-page a:focus-visible { outline: 2px solid #007aff; outline-offset: 4px; }
+.cv-topbar { position: sticky; top: 0; z-index: 20; height: 64px; display: flex; align-items: center; gap: 28px; padding: 0 24px; background: #ffffffb8; backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-bottom: 1px solid #28375415; }
+.cv-topbar > a:first-child { font-size: 18px; font-weight: 600; letter-spacing: -.5px; }
+.cv-topbar > span { font-size: 12px; color: #777c84; }
+.cv-back { margin-left: auto; font-size: 12px; }
+.cv-layout { display: grid; grid-template-columns: 210px minmax(0,800px); gap: 48px; max-width: 1150px; margin: 0 auto; padding: 44px 24px 80px; }
+.cv-sidebar { position: sticky; top: 100px; align-self: start; }
+.cv-label { font-size: 11px; color: #7a8493; }
+.cv-sidebar nav { display: grid; gap: 5px; margin: 18px 0 36px; font-size: 12px; }
+.cv-sidebar nav a { padding: 8px 0; }
+.cv-contact { border-top: 1px solid #28375415; padding-top: 22px; display: grid; gap: 9px; font-size: 11px; color: #7b8592; }
+.cv-document { min-width: 0; padding: 36px 40px; border: 1px solid #fff; border-radius: 18px; background: #ffffffa6; box-shadow: 0 6px 28px #172d5005; }
+.cv-introduction { padding-bottom: 30px; }
+.cv-introduction h1 { font-size: 28px; line-height: 1.25; letter-spacing: -.7px; font-weight: 600; margin: 10px 0 16px; }
+.cv-introduction > p:last-child { font-size: 14px; color: #697381; }
+.cv-document section { scroll-margin-top: 90px; margin-top: 30px; }
+.cv-document h2 { font-size: 12px; font-weight: 600; color: #727c89; padding-bottom: 13px; border-bottom: 1px solid #2837541b; }
+.cv-entry { padding: 24px 0; border-bottom: 1px solid #2837540e; }
+.cv-entry:last-child { border-bottom: 0; }
+.cv-entry-heading { display: flex; align-items: baseline; justify-content: space-between; gap: 18px; }
+.cv-entry h3 { font-size: 15px; line-height: 1.45; font-weight: 600; letter-spacing: -.2px; }
+.cv-entry time { font-size: 10px; color: #8791a0; flex-shrink: 0; }
+.cv-entry-heading p { font-size: 12px; margin-top: 4px; color: #626d7b; }
+.cv-entry-heading p span { color: #949ca6; }
+.cv-entry > p { font-size: 13px; color: #727c89; margin-top: 13px; }
+.cv-entry ul { padding-left: 16px; margin-top: 14px; color: #687382; font-size: 13px; }
+.cv-entry li + li { margin-top: 8px; }
+.cv-project-link { display: inline-block; margin-top: 12px; color: #0672d8 !important; font-size: 11px; }
+.cv-skills { margin-top: 18px; display: grid; gap: 16px; font-size: 12px; }
+.cv-skills > div { display: grid; grid-template-columns: 140px 1fr; gap: 16px; }
+.cv-skills dt { color: #727c89; }
+.cv-skills dd { margin: 0; color: #687382; }
+@media (max-width: 900px) {
+  .cv-layout { grid-template-columns: 1fr; gap: 26px; padding: 26px 20px 60px; }
+  .cv-sidebar { position: static; }
+  .cv-sidebar nav { display: flex; flex-wrap: wrap; column-gap: 24px; margin: 8px 0; }
+  .cv-contact { display: flex; flex-wrap: wrap; gap: 10px 20px; padding-top: 12px; }
+  .cv-document { padding: 30px; }
 }
-
-.resume-name {
-  font-size: 2.5rem;
-  font-weight: 800;
-  color: #111111;
-  margin-top: 10px;
-  margin-bottom: 5px;
+@media (max-width: 550px) {
+  .cv-topbar { gap: 14px; padding: 0 16px; }
+  .cv-topbar > span { font-size: 10px; }
+  .cv-back { font-size: 10px; }
+  .cv-layout { padding: 22px 12px 40px; }
+  .cv-sidebar { padding: 0 8px; }
+  .cv-document { padding: 24px 20px; }
+  .cv-entry-heading { flex-direction: column; gap: 7px; }
+  .cv-skills > div { grid-template-columns: 1fr; gap: 4px; }
 }
-
-.resume-contact {
-  color: #777777;
-  font-size: 0.95rem;
-}
-
-.resume-contact a {
-  color: #E85053;
-  text-decoration: none;
-}
-
-.resume-contact a:hover {
-  text-decoration: underline;
-}
-
-.resume-section {
-  margin-bottom: 35px;
-}
-
-.resume-section h2 {
-  font-size: 1.3rem;
-  font-weight: 700;
-  color: #E85053;
-  margin-bottom: 15px;
-  border-bottom: 1px solid rgba(0,0,0,0.1);
-  padding-bottom: 5px;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-
-.resume-item {
-  margin-bottom: 20px;
-}
-
-.resume-item-title {
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: #111111;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.resume-item-date {
-  font-size: 0.9rem;
-  font-weight: 500;
-  color: #777777;
-}
-
-.resume-item-sub {
-  font-size: 0.95rem;
-  font-weight: 500;
-  color: #555555;
-  margin-top: 2px;
-  margin-bottom: 8px;
-  font-style: italic;
-}
-
-.resume-list {
-  padding-left: 20px;
-  margin-top: 5px;
-}
-
-.resume-list li {
-  margin-bottom: 6px;
-  color: #444444;
-}
-
-.resume-bullets {
-  list-style-type: disc;
-  padding-left: 20px;
-}
-
-.resume-bullets li {
-  margin-bottom: 6px;
-  color: #444444;
-}
-
-.resume-skills-list {
-  list-style-type: disc;
-  padding-left: 20px;
-}
-
-.resume-skills-list li {
-  margin-bottom: 8px;
-  color: #444444;
-}
-
-.resume-skills-list strong {
-  color: #111111;
-  font-weight: 600;
-}
-
-.references {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.referee {
-  font-size: 0.95rem;
-  line-height: 1.5;
-  color: #555555;
-}
-
-.referee strong {
-  font-size: 1.05rem;
-  color: #111111;
-}
-
-@media (max-width: 600px) {
-  .resume-item-header {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-  
-  .resume-date {
-    margin-top: 4px;
-  }
+@media print {
+  .cv-page { background: white; color: black; }
+  .cv-topbar, .cv-sidebar { display: none; }
+  .cv-layout { display: block; margin: 0; padding: 0; }
+  .cv-document { border: 0; box-shadow: none; padding: 0; }
+  .cv-entry { break-inside: avoid; }
 }
