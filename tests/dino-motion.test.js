@@ -74,6 +74,13 @@ test('current dinosaur speaks its latest action in a bounded speech bubble', () 
   assert.match(css, /@keyframes dino-bubble-hop/);
 });
 
+test('a new episode renders its random initial direction before the first action', () => {
+  const jsx = readFileSync(new URL('../src/components/HeaderDino.jsx', import.meta.url), 'utf8');
+  assert.match(jsx, /if \(model\.finished\) \{[\s\S]*?model\.resetEpisode\(\);[\s\S]*?publish\(\);[\s\S]*?return;/);
+  assert.match(jsx, /model\.resetEpisode\(\{ facingAway: true \}\)/);
+  assert.match(jsx, /readyUntilRef\.current = Date\.now\(\) \+ 1000/);
+});
+
 test('learning arena links to the full Q-learning article', () => {
   const panel = readFileSync(new URL('../src/components/DinoLearningPanel.jsx', import.meta.url), 'utf8');
   const app = readFileSync(new URL('../src/App.jsx', import.meta.url), 'utf8');

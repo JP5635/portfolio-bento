@@ -65,9 +65,19 @@
 .explorer-search input { width: 100%; min-width: 0; height: 32px; border: 0; border-radius: 4px; background: transparent; padding: 6px 0; font-size: 16px; }
 .explorer-search input::placeholder { color: #9aa0a6; opacity: 1; }
 .explorer .explorer-search input:focus-visible { outline: none; }
-.explorer-sort { flex-shrink: 0; height: 32px; border: 0; border-radius: 999px; background: #f3f4f6; padding: 0 13px; white-space: nowrap; font-size: 13px !important; }
-.explorer-sort:hover { background: #e9ecf1; }
-.explorer-sort[aria-pressed=true] { background: #e8f1ff; color: #0067cc; }
+.explorer-sort-menu { position: relative; flex-shrink: 0; }
+.explorer-sort-menu > summary { display: grid; place-items: center; width: 34px; height: 34px; border: 0; border-radius: 50%; background: #f3f4f6; color: #7b8189; cursor: pointer; list-style: none; }
+.explorer-sort-menu > summary::-webkit-details-marker { display: none; }
+.explorer-sort-menu > summary:hover { background: #e9ecf1; color: #344b69; }
+.explorer-sort-menu > summary:focus-visible { outline: 2px solid #8aadd8; outline-offset: 2px; }
+.explorer-sort-menu[open] > summary { background: #fff; color: #344b69; box-shadow: 0 1px 4px #26355012; }
+.explorer-sort-menu > summary svg { width: 16px; height: 16px; }
+.explorer-sort-popover { position: absolute; top: calc(100% + 10px); right: 0; z-index: 30; display: grid !important; width: 190px; gap: 2px !important; padding: 7px; border: 1px solid #dce2e8; border-radius: 11px; background: rgba(255,255,255,.98); box-shadow: 0 12px 32px #26355020, 0 2px 8px #26355012; backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); }
+.explorer-sort-popover > span { padding: 5px 9px 7px; color: #9299a4; font-size: 11px; font-weight: 600; }
+.explorer-sort-popover button { display: flex; align-items: center; justify-content: space-between; width: 100%; min-height: 34px; padding: 7px 9px; border: 0; border-radius: 7px; background: transparent; color: #535d68; font-size: 13px; text-align: left; }
+.explorer-sort-popover button:hover,
+.explorer-sort-popover button:focus-visible { background: #f0f3f7; color: #25364c; outline: none; }
+.explorer-sort-popover button[aria-checked=true] { color: #245c9a; font-weight: 650; }
 .explorer-toolbar > .explorer-view-switch { display: flex; flex-shrink: 0; gap: 2px; padding: 2px; border: 0; border-radius: 999px; background: #f3f4f6; }
 .explorer-view-switch button { display: grid; place-items: center; width: 30px; height: 30px; border: 0; border-radius: 50%; background: transparent; color: #7b8189; }
 .explorer-view-switch button[aria-pressed=true] { background: #fff; color: #344b69; box-shadow: 0 1px 4px #26355012; }

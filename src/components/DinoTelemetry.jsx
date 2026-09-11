@@ -66,7 +66,7 @@ export default function DinoTelemetry({ view, learning, batch }) {
         <Metric label="Direction">{state.direction > 0 ? 'Right' : 'Left'}</Metric>
         <Metric label="Vision · next 3">{view.vision.join(' · ')}</Metric>
         <Metric label="Obstacles">{view.obstacles.length ? view.obstacles.join(', ') : 'None'}</Metric>
-        <Metric label="Goal direction">{goalDirection}</Metric>
+        <Metric label="Goal · hidden from agent">{goalDirection}</Metric>
         <Metric label="Collision">{view.last?.collision ? `Yes · ${view.last.collisionType}` : 'No'}</Metric>
       </dl>
     </section>

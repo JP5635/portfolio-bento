@@ -11,6 +11,7 @@ export default function HeaderDino({ active = true, detailed = false }) {
   const engineRef = useRef(null);
   const randomEngineRef = useRef(null);
   const batchRef = useRef(null);
+  const readyUntilRef = useRef(0);
   const controlsRef = useRef({ paused: false, learning: true, active: true });
   const [view, setView] = useState(null);
   const [width, setWidth] = useState(0);
@@ -51,10 +52,20 @@ export default function HeaderDino({ active = true, detailed = false }) {
     const timer = window.setInterval(() => {
       const control = controlsRef.current;
       const model = engineRef.current;
-      if (!model || control.paused || !control.active || batchRef.current !== null || document.hidden || motion.matches) return;
+      if (!model || control.paused || !control.active || batchRef.current !== null || document.hidden || motion.matches || Date.now() < readyUntilRef.current) return;
+      if (model.finished) {
+        model.resetEpisode();
+        if (randomEngineRef.current?.finished) {
+          randomEngineRef.current.resetEpisode();
+          setRandomView(randomEngineRef.current.snapshot());
+        }
+        publish();
+        return;
+      }
       model.step(control.learning);
       if (randomEngineRef.current) {
-        randomEngineRef.current.step(false);
+        if (randomEngineRef.current.finished) randomEngineRef.current.resetEpisode();
+        else randomEngineRef.current.step(false);
         setRandomView(randomEngineRef.current.snapshot());
       }
       publish();
@@ -115,7 +126,8 @@ export default function HeaderDino({ active = true, detailed = false }) {
       else {
         stopBatch();
         setLearning(false);
-        model.resetEpisode();
+        model.resetEpisode({ facingAway: true });
+        readyUntilRef.current = Date.now() + 1000;
         if (randomModel) {
           randomModel.resetEpisode();
           setRandomView(randomModel.snapshot());

@@ -14,20 +14,28 @@ export function seededRandom(seed = 12345) {
 
 export const OBSTACLES = [7, 16];
 export const VISION = 3;
+export const START_POSITION = Math.floor(CELLS / 2);
 
 export function stateKey(state, obstacles = OBSTACLES) {
-  return `${Math.sign(state.goal - state.position) === state.direction ? 1 : 0}:${observe(state, obstacles).join(',')}`;
+  return observe(state, obstacles).join(',');
 }
 
 export function initialState(random) {
-  const fromLeft = random() < 0.5;
-  return { position: fromLeft ? 0 : CELLS - 1, goal: fromLeft ? CELLS - 1 : 0,
-    direction: random() < 0.5 ? -1 : 1, steps: 0 };
+  const goal = random() < 0.5 ? 0 : CELLS - 1;
+  const direction = random() < 0.5 ? -1 : 1;
+  return {
+    position: START_POSITION,
+    goal,
+    direction,
+    steps: 0,
+  };
 }
 
-export function randomObstacleLayout(random) {
+export function randomObstacleLayout(random, reserved = []) {
+  const reservedCells = new Set(reserved);
   const target = 1 + Math.floor(random() * 3);
-  const candidates = Array.from({ length: CELLS - 4 }, (_, index) => index + 2);
+  const candidates = Array.from({ length: CELLS - 4 }, (_, index) => index + 2)
+    .filter(cell => !reservedCells.has(cell));
   for (let index = candidates.length - 1; index > 0; index--) {
     const swap = Math.floor(random() * (index + 1));
     [candidates[index], candidates[swap]] = [candidates[swap], candidates[index]];
@@ -40,8 +48,8 @@ export function randomObstacleLayout(random) {
     .sort((a, b) => a - b);
 }
 
-// The policy sees only three cells ahead plus a goal-bearing bit, not position
-// or the complete obstacle map. The simulator knows the map for collisions.
+// The policy sees only three cells ahead—not its position, the complete map,
+// or which direction contains the goal. The simulator knows the map for collisions.
 export function observe(state, obstacles = OBSTACLES) {
   return Array.from({ length: VISION }, (_, index) => {
     const cell = state.position + state.direction * (index + 1);
@@ -62,7 +70,6 @@ export function transition(state, action, obstacles = OBSTACLES) {
     collision = collisionType !== null;
     if (collision) reward -= 3;
     else next.position = candidate;
-    reward += 0.1 * (Math.abs(state.goal - state.position) - Math.abs(next.goal - next.position));
   }
   const complete = next.position === next.goal;
   if (complete) reward += 5;
@@ -100,11 +107,12 @@ export class DinoLearner {
   get epsilon() { return Math.max(0.05, 0.6 * Math.exp(-this.updates / 4000)); }
   values(state, obstacles = this.obstacles) { return this.q.get(stateKey(state, obstacles)) || [0, 0, 0]; }
 
-  resetEpisode() {
+  resetEpisode({ facingAway = false } = {}) {
     this.last = null;
     this.state = initialState(this.random);
+    if (facingAway) this.state.direction = -Math.sign(this.state.goal - this.state.position);
     this.episodeStart = { ...this.state };
-    this.obstacles = this.fixedObstacles ? [...this.fixedObstacles] : randomObstacleLayout(this.random);
+    this.obstacles = this.fixedObstacles ? [...this.fixedObstacles] : randomObstacleLayout(this.random, [this.state.position, this.state.goal]);
     this.totalReward = 0;
     this.collisions = 0;
     this.finished = false;
@@ -153,7 +161,7 @@ export class DinoLearner {
     let collisions = 0, successes = 0, reward = 0;
     for (let episode = 0; episode < episodes; episode++) {
       let state = initialState(starts);
-      const obstacles = this.fixedObstacles ? this.fixedObstacles : randomObstacleLayout(starts);
+      const obstacles = this.fixedObstacles ? this.fixedObstacles : randomObstacleLayout(starts, [state.position, state.goal]);
       for (let i = 0; i < MAX_STEPS; i++) {
         const { action } = selectAction(this.values(state, obstacles), randomPolicy ? 1 : 0, random);
         const result = transition(state, action, obstacles);

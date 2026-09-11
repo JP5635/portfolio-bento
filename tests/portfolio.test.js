@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { items, posts, collections, getRouteItem, getRelatedItems } from '../src/data/portfolio.js';
+import { items, posts, collections, getRouteItem, getRelatedItems, sortOptions, sortPortfolioItems } from '../src/data/portfolio.js';
 import { projects } from '../src/data/projects.js';
 import { media, projectMedia } from '../src/data/media.js';
 import { sepsisReport } from '../src/data/research.js';
@@ -23,6 +23,16 @@ test('every visible card resolves to its own route context', () => {
   assert.equal(getRouteItem('/researchq', '?context=research')?.collection, 'Projects');
   assert.equal(getRouteItem('/missing'), undefined);
   assert.equal(getRouteItem('/writing/missing'), undefined);
+});
+
+test('portfolio sort supports featured, name and verified-date orders', () => {
+  assert.deepEqual(sortOptions.map(option => option.value), ['featured', 'name-asc', 'name-desc', 'date-desc', 'date-asc']);
+  assert.deepEqual(sortPortfolioItems(posts, 'featured'), posts);
+  assert.equal(sortPortfolioItems(posts, 'name-asc')[0].title, 'Cleaning millions of spatial events in BigQuery');
+  assert.equal(sortPortfolioItems(posts, 'name-desc')[0].title, 'Vationo');
+  assert.equal(sortPortfolioItems(posts, 'date-desc')[0].id, 'writing-dino-q-learning');
+  assert.equal(sortPortfolioItems(posts, 'date-asc')[0].id, 'researchq');
+  assert.ok(sortPortfolioItems(posts, 'date-desc').slice(-3).every(item => !item.sortDate));
 });
 
 test('three projects have complete common-template content', () => {

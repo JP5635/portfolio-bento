@@ -30,10 +30,10 @@ function buildBenchmark() {
 }
 
 const rewardRows = [
-  ['Forward', '−0.02 action cost', '+0.10 when one cell closer', '+0.08 on a useful step'],
-  ['Turn', '−0.08 action cost', 'No distance bonus', '−0.08'],
-  ['Jump', '−0.12 action cost', '+0.20 when two cells closer', '+0.08 on a useful jump'],
-  ['Collision', '−3.00 penalty', 'Ends the episode', 'Strong negative signal'],
+  ['Forward', '−0.02 action cost', 'No direction hint', '−0.02'],
+  ['Turn', '−0.08 action cost', 'No direction hint', '−0.08'],
+  ['Jump', '−0.12 action cost', 'No direction hint', '−0.12'],
+  ['Collision', '−3.00 additional penalty', 'Ends the episode', 'Strong negative signal'],
   ['Goal', '+5.00 bonus', 'Ends the episode', 'Strong positive signal'],
 ];
 
@@ -93,8 +93,8 @@ export default function DinoQPost() {
         <div className="dino-two-col">
           <div className="dino-note-card">
             <h3>Observation</h3>
-            <p>One bit says whether it is facing the goal. The next three values describe the cells ahead as <code>clear</code>, <code>obstacle</code>, <code>wall</code> or <code>goal</code>.</p>
-            <code className="dino-state-example">1 : clear, obstacle, clear</code>
+            <p>Only the next three cells are observed. Each is described as <code>clear</code>, <code>obstacle</code>, <code>wall</code> or <code>goal</code>. The goal direction is not provided.</p>
+            <code className="dino-state-example">clear, obstacle, clear</code>
           </div>
           <div className="dino-note-card">
             <h3>Actions</h3>
@@ -102,25 +102,25 @@ export default function DinoQPost() {
             <code className="dino-state-example">Q [F +0.18 · T −0.04 · J +0.47]</code>
           </div>
         </div>
-        <p className="dino-article-aside">Absolute position and the full obstacle map are hidden. This compact state lets one learned response transfer to many random layouts.</p>
+        <p className="dino-article-aside">Absolute position, goal direction and the full obstacle map are hidden. The agent must search one side, turn at a wall when necessary and continue until the goal enters its local vision.</p>
       </section>
 
       <section className="dino-article-section">
         <p className="dino-article-kicker">One learning step</p>
         <h2>Observe → choose → act → reward → update.</h2>
         <ol className="dino-process">
-          <li><span>01</span><div><strong>Observe</strong><p>Encode goal direction and the three cells in front.</p></div></li>
+          <li><span>01</span><div><strong>Observe</strong><p>Encode only the three cells in front.</p></div></li>
           <li><span>02</span><div><strong>Choose</strong><p>Usually take the highest-Q action; sometimes explore a random one.</p></div></li>
           <li><span>03</span><div><strong>Act</strong><p>Move, turn or jump in the 24-cell environment.</p></div></li>
-          <li><span>04</span><div><strong>Reward</strong><p>Combine action cost, progress, collision and goal signals.</p></div></li>
+          <li><span>04</span><div><strong>Reward</strong><p>Combine action cost, collision and goal signals without revealing direction.</p></div></li>
           <li><span>05</span><div><strong>Update</strong><p>Move the chosen Q-value toward the Bellman target.</p></div></li>
         </ol>
       </section>
 
       <section className="dino-article-section">
         <p className="dino-article-kicker">Reward design</p>
-        <h2>Why a good move often says Reward +0.08.</h2>
-        <p>The number is the immediate reward for one action. A useful forward move pays its −0.02 cost, then earns +0.10 for getting one cell closer: <strong>−0.02 + 0.10 = +0.08</strong>. A useful jump also nets +0.08 because it costs −0.12 and gains +0.20 for two cells of progress.</p>
+        <h2>Useful moves still pay a small search cost.</h2>
+        <p>The number is the immediate reward for one action. Forward, turn and jump have small costs, but moving closer to an unseen goal earns no directional bonus. The agent receives a large positive signal only when it reaches the meat and a large negative signal when it collides.</p>
         <div className="dino-table-wrap">
           <table className="dino-article-table">
             <thead><tr><th>Event</th><th>Base signal</th><th>Adjustment</th><th>Typical result</th></tr></thead>

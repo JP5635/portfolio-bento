@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { ALPHA, GAMMA, DinoLearner, observe, randomObstacleLayout, seededRandom, stateKey, transition, updateQ } from '../src/components/dino-learning.js';
+import { ALPHA, GAMMA, START_POSITION, DinoLearner, initialState, observe, randomObstacleLayout, seededRandom, stateKey, transition, updateQ } from '../src/components/dino-learning.js';
 
 const state = (position = 6, direction = 1) => ({ position, direction, goal: 23, steps: 0 });
 
@@ -11,6 +11,7 @@ test('sensor sees only three cells in the facing direction, including walls', ()
   assert.deepEqual(observe(state(0, -1)), ['wall', 'wall', 'wall']);
   assert.equal(stateKey(state(2)), stateKey(state(10)));
   assert.equal(stateKey(state(2), [7, 16]), stateKey(state(2), [8, 18]));
+  assert.equal(stateKey({ position: 12, direction: 1, goal: 0, steps: 0 }, []), stateKey({ position: 12, direction: 1, goal: 23, steps: 0 }, []));
 });
 
 test('forward collides, turn changes facing only, jump clears one obstacle', () => {
@@ -26,7 +27,9 @@ test('forward collides, turn changes facing only, jump clears one obstacle', () 
   const jump = transition(state(), 2);
   assert.equal(jump.next.position, 8);
   assert.equal(jump.collision, false);
-  assert.ok(Math.abs(jump.reward - 0.08) < 1e-12);
+  assert.equal(jump.reward, -0.12);
+  assert.equal(transition({ position: 12, direction: 1, goal: 23, steps: 0 }, 0, []).reward,
+    transition({ position: 12, direction: 1, goal: 0, steps: 0 }, 0, []).reward);
 });
 
 test('jump landing on an obstacle or beyond a wall collides, in either direction', () => {
@@ -40,7 +43,7 @@ test('jump landing on an obstacle or beyond a wall collides, in either direction
 test('goal completion and collision are terminal; time limits only truncate', () => {
   const goal = transition(state(22), 0);
   assert.equal(goal.complete, true);
-  assert.equal(goal.reward, 5.08);
+  assert.equal(goal.reward, 4.98);
   const timeout = transition({ ...state(2), steps: 99 }, 1);
   assert.equal(timeout.truncated, true);
   assert.equal(timeout.terminal, false);
@@ -49,6 +52,20 @@ test('goal completion and collision are terminal; time limits only truncate', ()
 test('Q-learning applies Bellman update, without bootstrapping terminal states', () => {
   assert.equal(updateQ([1, 2, 3], 0, 0.5, [2, 4, 6], false), 1 + ALPHA * (0.5 + GAMMA * 6 - 1));
   assert.equal(updateQ([1, 2, 3], 1, -3, [100, 100, 100], true), 2 + ALPHA * (-3 - 2));
+});
+
+test('episodes start in the middle with endpoint goals and independent initial directions', () => {
+  const random = seededRandom(90826);
+  const starts = Array.from({ length: 100 }, () => initialState(random));
+  assert.ok(starts.every(entry => entry.position === START_POSITION));
+  assert.ok(starts.every(entry => entry.goal === 0 || entry.goal === 23));
+  assert.deepEqual(new Set(starts.map(entry => entry.goal)), new Set([0, 23]));
+  assert.deepEqual(new Set(starts.map(entry => entry.direction)), new Set([-1, 1]));
+  assert.ok(starts.some(entry => Math.sign(entry.goal - entry.position) === entry.direction));
+  assert.ok(starts.some(entry => Math.sign(entry.goal - entry.position) !== entry.direction));
+  const challenge = new DinoLearner();
+  challenge.resetEpisode({ facingAway: true });
+  assert.notEqual(Math.sign(challenge.state.goal - challenge.state.position), challenge.state.direction);
 });
 
 test('each episode gets one to three separated, solvable obstacles', () => {
@@ -67,6 +84,8 @@ test('the live model changes layouts by episode while an explicit test layout st
   const model = new DinoLearner();
   const seen = new Set([model.obstacles.join(',')]);
   for (let episode = 0; episode < 20; episode++) {
+    assert.ok(!model.obstacles.includes(model.state.position));
+    assert.ok(!model.obstacles.includes(model.state.goal));
     model.resetEpisode();
     seen.add(model.obstacles.join(','));
   }
@@ -84,7 +103,8 @@ test('500 episodes learn a better policy than random; evaluation and run mode ne
   const snapshot = JSON.stringify([...model.q]);
   const updates = model.updates;
   const result = model.evaluate();
-  assert.ok(result.success > 0.95);
+  assert.ok(result.success > 0.85);
+  assert.ok(result.success > baseline.success + 0.75);
   assert.ok(result.collisions < baseline.collisions);
   assert.ok(result.reward > baseline.reward);
   assert.equal(JSON.stringify([...model.q]), snapshot);
