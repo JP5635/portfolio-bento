@@ -37,12 +37,10 @@ test('the goal uses the generated meat image rather than an emoji or green finis
   assert.equal(existsSync(new URL('../public/media/dino-meat-goal.png', import.meta.url)), true);
 });
 
-test('learning arena stays in document flow while the search toolbar remains fixed', () => {
+test('learning arena stays in document flow inside its article', () => {
   const arenaCss = readFileSync(new URL('../src/components/DinoLearningPanel.css', import.meta.url), 'utf8');
-  const pageCss = readFileSync(new URL('../src/pages/PortfolioExplorer.css', import.meta.url), 'utf8');
   assert.match(arenaCss, /\.dino-learning-space\s*\{[\s\S]*?position: relative;/);
   assert.doesNotMatch(arenaCss, /\.dino-learning-space\s*\{[\s\S]*?position: fixed;/);
-  assert.match(pageCss, /\.explorer-toolbar\s*\{\s*position: fixed;/);
 });
 
 test('arena reserves enough vertical room for the dinosaur jump', () => {

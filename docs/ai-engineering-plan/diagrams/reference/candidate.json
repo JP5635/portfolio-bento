@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Reference design: evidence and execution",
+    "output": "output/ai-engineering-plan/diagrams/reference/ai-reference-architecture.html",
+    "quality_profile": "showcase",
+    "locale": "en"
+  },
+  "components": [
+    { "id": "requester", "type": "external", "icon": "person", "label": "User", "sublabel": "A question or analysis task", "pos": [40, 110], "size": [160, 74] },
+    { "id": "application", "type": "frontend", "label": "Authenticated app", "sublabel": "Caller identity + user intent", "pos": [340, 110], "size": [200, 74] },
+    { "id": "context", "type": "backend", "label": "Context builder", "sublabel": "Permissions, provenance, budget", "pos": [720, 110], "size": [220, 74] },
+    { "id": "model", "type": "cloud", "label": "Model API", "sublabel": "Proposes; does not authorise", "pos": [1130, 110], "size": [200, 74] },
+    { "id": "evidence", "type": "database", "label": "Evidence + history", "sublabel": "Access-filtered retrieval", "pos": [720, 300], "size": [220, 74] },
+    { "id": "broker", "type": "security", "label": "Execution broker", "sublabel": "Caller grants + allowed actions", "tag": "Deterministic checks", "pos": [1110, 510], "size": [240, 90] },
+    { "id": "worker", "type": "backend", "label": "Sandbox worker", "sublabel": "CPU/RAM, time, disk, network", "tag": "Required limits", "pos": [710, 510], "size": [240, 90] },
+    { "id": "data", "type": "backend", "label": "Governed data API", "sublabel": "Checks data grants per request", "tag": "Least-privilege access", "pos": [320, 510], "size": [240, 90] }
+  ],
+  "boundaries": [
+    { "kind": "security-group", "label": "Required execution boundary", "wraps": ["worker"], "pad": 34 }
+  ],
+  "connections": [
+    { "id": "user-request", "from": "requester", "to": "application", "label": "request", "variant": "emphasis" },
+    { "id": "authorised-context", "from": "application", "to": "context", "label": "caller + intent", "variant": "emphasis" },
+    { "id": "context-to-model", "from": "context", "to": "model", "label": "bounded prompt", "variant": "emphasis" },
+    { "id": "evidence-read", "from": "evidence", "to": "context", "label": "selected evidence", "variant": "dashed" },
+    { "id": "model-proposal", "from": "model", "to": "broker", "label": "untrusted proposal", "variant": "security" },
+    { "id": "broker-to-worker", "from": "broker", "to": "worker", "label": "authorised job", "variant": "security" },
+    { "id": "worker-to-data", "from": "worker", "to": "data", "label": "scoped request", "variant": "security" }
+  ],
+  "cards": [
+    { "dot": "cyan", "title": "Purpose and scope", "items": ["Original teaching architecture for question answering and analysis.", "This is a reference design, not a map of a deployed product.", "Arrows show forward requests; return results are omitted for clarity."] },
+    { "dot": "violet", "title": "Evidence is not authority", "items": ["Retrieve only material the caller may access; preserve source identity.", "Context budgets control prompt size; they do not grant execution rights.", "The model proposes an action; application policy decides whether it may run."] },
+    { "dot": "rose", "title": "Required enforcement", "items": ["Bind every job to the authenticated caller; validate tool, target and arguments.", "Deny disallowed actions; require review where policy demands it.", "Enforce isolation, resource deadlines, network rules and data grants outside the model.", "Human approval is a workflow gate; it is not process or container isolation."] }
+  ]
+}

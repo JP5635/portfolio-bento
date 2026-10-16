@@ -1,0 +1,218 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": {
+    "title": "From Local SQL to Queryable Lakehouse Data",
+    "output": "dataflow/lakehouse-dataflow.html",
+    "locale": "en",
+    "quality_profile": "showcase",
+    "viewBox": [
+      1080,
+      680
+    ]
+  },
+  "stages": [
+    {
+      "label": "Source"
+    },
+    {
+      "label": "Local SQL"
+    },
+    {
+      "label": "Transfer assets"
+    },
+    {
+      "label": "Platform adapter"
+    },
+    {
+      "label": "Managed lakehouse"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "files",
+      "type": "external",
+      "label": "Local files",
+      "sublabel": "CSV / JSON / Parquet",
+      "stage": 0,
+      "row": 0,
+      "width": 144
+    },
+    {
+      "id": "duck",
+      "type": "database",
+      "label": "DuckDB",
+      "sublabel": "embedded SQL engine",
+      "stage": 1,
+      "row": 0,
+      "width": 144
+    },
+    {
+      "id": "batch",
+      "type": "database",
+      "label": "Parquet batches",
+      "sublabel": "immutable data + manifest",
+      "stage": 2,
+      "row": 0,
+      "width": 144
+    },
+    {
+      "id": "adapter",
+      "type": "backend",
+      "label": "Upload service",
+      "sublabel": "provider / platform adapter",
+      "stage": 3,
+      "row": 0,
+      "width": 144
+    },
+    {
+      "id": "catalog",
+      "type": "backend",
+      "label": "Table publication",
+      "sublabel": "connector-dependent commit",
+      "stage": 3,
+      "row": 2,
+      "width": 144
+    },
+    {
+      "id": "readers",
+      "type": "backend",
+      "label": "Zetaris SQL readers",
+      "sublabel": "verify query freshness",
+      "stage": 4,
+      "row": 3,
+      "width": 144
+    },
+    {
+      "id": "journal",
+      "type": "database",
+      "label": "Sync journal",
+      "sublabel": "batch IDs + checkpoints",
+      "stage": 1,
+      "row": 2,
+      "width": 144
+    },
+    {
+      "id": "inspect",
+      "type": "backend",
+      "label": "Metadata check",
+      "sublabel": "marker / snapshot check",
+      "stage": 2,
+      "row": 2,
+      "width": 144
+    },
+    {
+      "id": "managed",
+      "type": "cloud",
+      "label": "S3 or OCI bucket",
+      "sublabel": "managed lakehouse data",
+      "stage": 4,
+      "row": 2,
+      "width": 144
+    }
+  ],
+  "flows": [
+    {
+      "from": "files",
+      "to": "duck",
+      "label": "scan + SQL",
+      "variant": "emphasis",
+      "labelDy": -28
+    },
+    {
+      "from": "duck",
+      "to": "batch",
+      "label": "export batch",
+      "variant": "emphasis",
+      "labelDy": -28
+    },
+    {
+      "from": "batch",
+      "to": "adapter",
+      "label": "upload parts",
+      "variant": "emphasis",
+      "labelDy": -28
+    },
+    {
+      "from": "adapter",
+      "to": "catalog",
+      "label": "ingest + publish",
+      "variant": "emphasis",
+      "labelDy": 25
+    },
+    {
+      "from": "catalog",
+      "to": "managed",
+      "label": "commit data",
+      "variant": "emphasis"
+    },
+    {
+      "from": "managed",
+      "to": "readers",
+      "label": "read tables",
+      "variant": "emphasis",
+      "labelDy": 25
+    },
+    {
+      "from": "duck",
+      "to": "journal",
+      "label": "checkpoint",
+      "variant": "dashed",
+      "labelDy": 25
+    },
+    {
+      "from": "journal",
+      "to": "inspect",
+      "label": "reconcile",
+      "variant": "dashed"
+    },
+    {
+      "from": "inspect",
+      "to": "catalog",
+      "label": "verify commit",
+      "variant": "dashed",
+      "labelDy": -28
+    },
+    {
+      "from": "catalog",
+      "to": "journal",
+      "label": "record outcome",
+      "variant": "dashed",
+      "route": "bottom-channel",
+      "fromSide": "bottom",
+      "toSide": "bottom",
+      "channelY": 480,
+      "labelAt": [
+        530,
+        468
+      ]
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Reference design, not a private deployment",
+      "items": [
+        "Generic components show separate gates: staging upload, platform table commit and query freshness.",
+        "The client uploads through a platform adapter; it does not write directly to managed lakehouse storage."
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "Two different snapshots",
+      "items": [
+        "A DuckDB transaction snapshot protects a local read view.",
+        "Lakehouse snapshots belong to the table format and catalog; verify support in the adapter.",
+        "OCI uses an S3-compatible provider path; adapter support must be verified per deployment."
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "Reconcile observable state",
+      "items": [
+        "Persist stable batch identities and checkpoints; verify committed batches individually.",
+        "An earlier batch can be queryable before a full file finishes. Application convergence is separate from object store consistency."
+      ]
+    }
+  ]
+}

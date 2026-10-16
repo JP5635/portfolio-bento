@@ -1,0 +1,34 @@
+.ai-article .detail-heading { padding-bottom: 26px; }
+.ai-article .detail-toc { gap: 7px 20px; padding: 18px 0; }
+.ai-article .detail-section { padding: 34px 0; }
+.ai-article .detail-section h2 { font-size: 21px; line-height: 1.4; max-width: 36ch; }
+.ai-article .detail-section > p { max-width: 74ch; }
+.ai-article .detail-section > p + .detail-source-notes { margin-top: 20px; }
+.ai-article .ai-source-link { margin-top: 20px; font-size: 13px; }
+.ai-diagram { margin: 24px 0 0; border: 1px solid #d5e0e5; background: #f8fafb; border-radius: 10px; overflow: hidden; }
+.ai-diagram iframe { width: 100%; height: 590px; display: block; border: 0; }
+.ai-diagram .ai-diagram-mobile-preview { display: none; width: 100%; height: auto; aspect-ratio: 480 / 174; background: #f3f5f0; }
+.ai-diagram figcaption { padding: 13px 17px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 9px; border-top: 1px solid #d5e0e5; font-size: 11px; color: #586d78; }
+.ai-diagram figcaption a { font-weight: 600; }
+.ai-article .ai-references { font-size: 14px; }
+.ai-series { padding: 28px; background: #eef4f3; border: 1px solid #d3e2df; border-radius: 10px; margin: 12px 0 26px; }
+.ai-series h2 { margin: 0 0 19px; font-size: 15px; font-weight: 600; color: #34534f; }
+.ai-series ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; }
+.ai-series li { display: grid; grid-template-columns: 25px 1fr; gap: 12px; font-size: 13px; line-height: 1.6; }
+.ai-series li > span { color: #6b817c; font-size: 11px; padding-top: 2px; }
+.ai-series strong { font-weight: 600; color: #254e44; }
+.ai-pagination { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 26px 0 8px; }
+.ai-pagination a { display: grid; gap: 8px; padding: 20px 0; border-top: 1px solid #d5e0e5; text-decoration: none !important; }
+.ai-pagination a:last-child { text-align: right; grid-column: 2; }
+.ai-pagination small { font-size: 11px; color: #6c7e89; }
+.ai-pagination span { font-size: 14px; line-height: 1.6; }
+.ai-pagination a:focus-visible, .ai-series a:focus-visible { outline: 2px solid #477c90; outline-offset: 4px; }
+@media (max-width: 650px) {
+  .ai-article .detail-section { padding: 27px 0; }
+  .ai-article .detail-section h2 { font-size: 19px; }
+  .ai-diagram iframe { display: none; }
+  .ai-diagram .ai-diagram-mobile-preview { display: block; }
+  .ai-series { padding: 21px 18px; }
+  .ai-pagination { gap: 16px; }
+  .ai-pagination span { font-size: 12px; }
+}

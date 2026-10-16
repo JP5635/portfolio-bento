@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Link, Outlet, useLocation, useNavigate, useParams } from 'react-router-dom';
 import './PortfolioExplorer.css';
 import ProjectCover from '../components/ProjectCover';
-import HeaderDino from '../components/HeaderDino';
+import { projectCovers } from '../data/media';
 
 import { collections, posts, items, getRouteItem, sortOptions, sortPortfolioItems } from '../data/portfolio';
 import RelatedContent from '../components/RelatedContent';
@@ -29,6 +29,7 @@ export default function PortfolioExplorer() {
     return () => document.removeEventListener('pointerdown', closeSort);
   }, []);
   const location = useLocation();
+  const pathname = location.pathname.replace(/\/+$/, '') || '/';
   const navigate = useNavigate();
   const isList = location.pathname === '/';
   const detailRef = useRef(null);
@@ -38,15 +39,26 @@ export default function PortfolioExplorer() {
     if (location.pathname !== '/') detailRef.current?.focus({ preventScroll: true });
   }, [location.pathname, location.search]);
   useEffect(() => {
-    const fallbackTitles = { '/': 'Data Scientist', '/resume': 'Résumé', '/datastack': 'Data stack', '/mlstack': 'ML stack' };
-    document.title = `${routeItem?.title || fallbackTitles[location.pathname] || 'Page not found'} | Jongho Park`;
-    document.querySelector('meta[name="description"]')?.setAttribute('content', routeItem?.summary || 'Projects, applied research and technical writing by Jongho Park, Data Scientist.');
+    const fallbackTitles = { '/': 'Software Engineer', '/resume': 'Résumé' };
+    const title = `${routeItem?.title || fallbackTitles[pathname] || 'Page not found'} | Jongho Park`;
+    const description = routeItem?.summary || 'Full-stack development, multi-cloud deployment validation and applied AI. Engineering work and technical writing by Jongho Park, Software Engineer in Melbourne.';
+    document.title = title;
+    document.querySelector('meta[name="description"]')?.setAttribute('content', description);
+    document.querySelector('meta[property="og:title"]')?.setAttribute('content', title);
+    document.querySelector('meta[property="og:description"]')?.setAttribute('content', description);
+    const canonical = `https://jp5635.github.io/portfolio-bento${pathname === '/' ? '/' : pathname}`;
+    document.querySelector('link[rel="canonical"]')?.setAttribute('href', canonical);
+    document.querySelector('meta[property="og:url"]')?.setAttribute('content', canonical);
+    const social = projectCovers[routeItem?.id]?.social || projectCovers[routeItem?.related]?.social || 'covers/portfolio-social.png';
+    let image = document.querySelector('meta[property="og:image"]');
+    if (!image) { image = document.createElement('meta'); image.setAttribute('property', 'og:image'); document.head.appendChild(image); }
+    image.content = `https://jp5635.github.io/portfolio-bento/${social}`;
     let robots = document.querySelector('meta[name="robots"]');
     if (!robots) { robots = document.createElement('meta'); robots.name = 'robots'; document.head.appendChild(robots); }
-    robots.content = routeItem?.publicationStatus === 'planned' || (!routeItem && !fallbackTitles[location.pathname]) ? 'noindex, follow' : 'index, follow';
-  }, [routeItem, location.pathname]);
+    robots.content = routeItem?.publicationStatus === 'planned' || (!routeItem && !fallbackTitles[pathname]) ? 'noindex, follow' : 'index, follow';
+  }, [routeItem, pathname]);
   const activeCollection = isList ? collection : routeItem?.collection;
-  const visible = sortPortfolioItems(posts.filter(item => (collection === 'All' || item.collection === collection) && `${item.title} ${item.category} ${item.collection}`.toLowerCase().includes(query.toLowerCase())), sortMode);
+  const visible = sortPortfolioItems(posts.filter(item => (collection === 'All' || item.collection === collection) && `${item.title} ${item.category} ${item.collection} ${item.summary}`.toLowerCase().includes(query.toLowerCase())), sortMode);
   const sortLabel = sortOptions.find(option => option.value === sortMode)?.label || 'Featured';
 
   function openCollection(name) {
@@ -59,7 +71,7 @@ export default function PortfolioExplorer() {
     <div className="explorer">
       <a className="explorer-skip" href="#portfolio-content">Skip to content</a>
       <header className="explorer-header">
-        <h1><Link to="/">Jongho Park</Link></h1><span>Data Scientist</span>
+        <h1><Link to="/">Jongho Park</Link></h1><span>Software Engineer</span>
         <nav className="explorer-social" aria-label="Social profiles"><a href="https://github.com/JP5635" target="_blank" rel="noreferrer">GitHub ↗</a><a href="https://www.linkedin.com/in/jongho-p/" target="_blank" rel="noreferrer">LinkedIn ↗</a></nav>
       </header>
       <div className="explorer-layout">
@@ -70,10 +82,15 @@ export default function PortfolioExplorer() {
               <span>{name}</span><small>{name === 'All' ? posts.length : posts.filter(item => item.collection === name).length}</small>
             </button>)}
           </nav>
-          <div className="explorer-about"><span>Melbourne, Australia</span></div>
+          <div className="explorer-about"><span>Melbourne, Australia</span><p>Full-stack · Cloud · Applied AI</p><div><Link to="/resume">Résumé ↗</Link><a href="mailto:pjh5635@gmail.com">Email ↗</a></div></div>
         </aside>
-        <HeaderDino active={isList} />
         {isList ? <main id="portfolio-content" tabIndex={-1} className="explorer-main" aria-label="Portfolio items">
+          <section className="explorer-introduction" aria-labelledby="portfolio-introduction">
+            <p className="explorer-introduction-label">Melbourne-based software engineer</p>
+            <h2 id="portfolio-introduction">Full-stack development,<br className="intro-desktop-break" /> cloud systems &amp; applied AI.</h2>
+            <p>I build web applications, cloud test systems and AI workflows. At Zetaris, I contribute to React/TypeScript features, Java/Spring APIs and deployment validation across AWS, Azure and OCI.</p>
+            <div className="explorer-introduction-links"><Link to="/resume">View résumé <span aria-hidden="true">↗</span></Link><a href="mailto:pjh5635@gmail.com">Get in touch <span aria-hidden="true">↗</span></a></div>
+          </section>
           <div className="explorer-toolbar">
             <label className="explorer-search"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5" /><path d="m13 13 4 4" /></svg><input aria-label="Search portfolio" placeholder="Search…" value={query} onChange={event => setQuery(event.target.value)} /></label>
             <div className="explorer-collection"><span>{collection}</span><small>{visible.length} items</small></div>
@@ -104,7 +121,7 @@ export default function PortfolioExplorer() {
                 <div className="explorer-card-meta"><span>{item.collection}</span><span>{item.category}</span></div>
                 <h2>{item.title}</h2>
                 <p>{item.summary}</p>
-                <div className="explorer-card-bottom"><span>{item.collection === 'Projects' ? 'Go' : item.status}</span><span aria-hidden="true">↗</span></div>
+                <div className="explorer-card-bottom"><span>{item.status}</span><span aria-hidden="true">↗</span></div>
               </div>
             </Link>)}
           </div> : <div className="explorer-table" role="group" aria-label="Portfolio details">
@@ -127,6 +144,6 @@ export function WritingDetail() {
   const item = items.find(entry => entry.id === slug && entry.collection === 'Blog');
   return <main className="explorer-writing-detail">
     <Link className="explorer-back" to="/">← Back to work</Link>
-    {item ? <article><p className="explorer-caption">Proposed article · {item.category}</p><h1>{item.title}</h1><p>{item.summary}</p><p className="explorer-writing-status">This article is planned; the full text is not available yet.</p><RelatedContent id={item.id} /></article> : <h1>Article not found</h1>}
+    {item ? <article><p className="explorer-caption">Proposed article · {item.category}</p><h1>{item.title}</h1><p>{item.summary}</p><p className="explorer-writing-status">This article is planned and is not included in the published collection. Explore the completed work below.</p><RelatedContent id={item.id} /></article> : <h1>Article not found</h1>}
   </main>;
 }

@@ -10,7 +10,7 @@
 
 ## 1. 스크린샷 분류
 
-원본 이미지 위치: `/Users/jonghopark/Documents/Github/resume-create/resources/`
+원본 자료 기준 위치: `resume-create/resources/` (공개 사이트 자산 경로와 별개)
 
 | 파일 | 확인된 내용 | 포트폴리오 활용 판단 |
 | --- | --- | --- |
@@ -41,7 +41,7 @@ p4.png에 다음 제목이 보인다. 이는 현재 포트폴리오의 예고 �
 
 ## 2. Sepsis: 가장 먼저 활용할 근거
 
-원본: `/Users/jonghopark/Documents/Github/resume-create/ML4Health_report_1.pdf`
+원본 자료 식별자: `resume-create/ML4Health_report_1.pdf`
 
 - 31페이지, COMP90089 Final Report. 제목: An Interpretable Machine Learning Approach for Early Sepsis Detection in ICUs.
 - 저자는 Adam Mantello, Jongho Park, Ken Liu, Tina Cheng. 출판 논문이 확인된 것은 아니므로 대학 팀 프로젝트 보고서로 분류한다.

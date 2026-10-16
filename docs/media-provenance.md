@@ -32,3 +32,40 @@ PDF 렌더링: Poppler `pdftoppm`, single-page PNG. p.22는 `-scale-to 1600 -x 1
 - 변경점: 카드 비율에 맞춰 전체 격자를 담는 카메라, 필요한 시점에만 로딩, 최대 24fps/DPR 1.5, 4.5초 재생 후 정지, hover/focus 및 상세 버튼으로 재생. 화면 밖/숨겨진 탭에서는 중단하고 reduced-motion에서는 정지한다. 언마운트 시 WebGL 자원을 해제한다.
 - 카드와 `/vationo` 상세에 적용. 상세에서 원본 사이트 링크를 제공한다. 수익률·백테스트·실제 모델 출력의 증거로 사용하지 않는다.
 - WebGL/로딩 실패 시 Vationo 이름과 “The learning engine” 텍스트를 유지한다. 외부 배포는 수행하지 않았다.
+
+## Professional project covers · 2026-10-16
+
+The portfolio covers use a shared 480:286 editorial frame, an off-white background, navy typography and restrained teal connections. The three engineering-article covers are original educational SVGs explaining general techniques. They contain no customer identifiers, private screenshots, measured workloads or employer-specific system diagrams. Existing independent-project and academic artifacts retain their source notes below.
+
+| Cover | Source and treatment | Interpretation boundary |
+| --- | --- | --- |
+| `public/covers/byoc-validation.svg` | Original Playwright testing illustration: API fixture, UI action, then independent API and fresh-session reads. | A general persisted-state verification method. The legacy asset filename is retained for compatibility; the diagram does not portray a particular cloud deployment. |
+| `public/covers/credential-access.svg` | Original PostgreSQL transactional-outbox illustration: one transaction commits state and intent, a worker delivers the operation, and the receiver deduplicates by a stable ID. | A general reliability pattern. Retries provide at-least-once delivery; idempotency remains an explicit receiver responsibility. |
+| `public/covers/lakehouse-sync.svg` | Original S3 multipart-upload illustration: uploaded parts, a part manifest, completion and size/checksum verification, with reconciliation before resume. | A general transfer method. ETags identify parts for completion; a separate checksum verifies integrity. No workload result is asserted. |
+| ResearchQ cover | Existing `public/media/researchq-library.png`, framed with an explicit captured-version heading. CSS displays the upper part of the original library capture; full source remains in SourceGallery. | A historical interface capture. Visible article dates are December 2025; the capture date is not independently known. Imported into this portfolio on 2026-09-09, not verified against the current service. |
+| Sepsis project cover | Existing `public/media/sepsis-dashboard-evaluation.png`, fully contained inside the frame. | A report excerpt from a separate dashboard demonstration run, not the model-comparison results or a clinical validation claim. |
+| Sepsis research cover | Existing `public/media/sepsis-gam-figures.png`, SVG-viewport-cropped to the complete lower partial-dependence figure (Figure 22), preserving axes and caption. The original Figures 21–22 remain available in SourceGallery. | Unmodified report pixels. The course report's feature/term mapping caveat remains applicable; cover is not independent reproduction of the research. |
+| `public/covers/vationo-framework.svg` | Existing project description of signals, clustering-based regimes and exposure allocation. | A high-level research framework. Contains no return chart, simulated results or investment-performance values. Replaces the decorative WebGL scene on project cards. |
+| `public/covers/retrieval-evaluation.svg` | Documented title-based self-retrieval diagnostic loop: query, embed, retrieve, expected document in top five. | A method diagram; it does not broaden the narrow evaluation into general relevance or answer-quality accuracy. |
+| `public/covers/q-learning.svg` | The published explainer's observation/action/reward/Q-update loop. | A static teaching diagram, no invented Q values or training-performance results. |
+| `public/covers/document-structure.svg`, `additive-model.svg`, `spatial-workflow.svg` | Conceptual method illustrations for the corresponding proposed articles. | They do not claim published article bodies, fitted clinical curves, or real mapped spatial outputs. |
+
+The three engineering-article covers and ResearchQ also have matching `*-social.svg` editable masters and browser-rendered `*-social.png` previews at 1200×630. The diagram PNGs are raster exports of the authored vector artwork. The ResearchQ social preview frames the original screenshot, marks it as historical and preserves the original interface pixels. Its editable SVG references the existing local media asset; the exported PNG is self-contained.
+
+`src/data/media.js` keeps the original source-gallery registry and adds a separate cover registry. `ProjectCover` resolves only known registry IDs, labels diagrams and captures, provides descriptive alternative text and shows a neutral overview for missing IDs or failed assets. Covers have no animation or remote dependency; reduced-motion preferences remain respected. The SourceGallery continues to offer the original figures and their full caveats.
+
+Validation: targeted ESLint passed for `ProjectCover.jsx` and `media.js`; all nine new card SVGs passed XML parsing and 480:286/title/description checks. All four social PNGs are1200×630 and were visually reviewed. Visual review and whole-site build are recorded in the implementation handoff. External deployment is outside this media update.
+
+The neutral `public/covers/portfolio-social.svg` brand preview and its 1200×630 PNG export use the same authored typography and palette for general portfolio routes. Copy: Jongho Park / Software Engineer / Full-stack · Cloud · Applied AI. It contains no project-specific illustration or performance claim.
+
+### Engineering-article cover refresh · 2026-10-16
+
+The three legacy commercial-cover filenames now contain general technical teaching diagrams for persisted-state testing, transactional outbox delivery and resumable multipart uploads. Each begins with its purpose and uses an invented, minimal flow rather than a company system. No supplied company document, customer capture, internal source file or measured workload was copied into these assets or this provenance record.
+
+The matching social previews were regenerated directly from the refreshed SVG masters with headless Chrome. Validation passed for all six SVGs (XML parsing, declared dimensions and accessible title/description), all three PNGs (1200×630), and the updated media registry (ESLint). Card-size composites and all three social PNGs were visually checked for legibility and clipping. These assets explain methods; they do not substantiate employment implementation or deployment outcomes.
+
+### AI engineering series · 2026-10-16
+
+The six `ai-*.svg` cover illustrations and matching `ai-*-social.svg` / PNG variants are original, code-authored teaching diagrams. Their nodes illustrate API operations, context selection, vector retrieval, wiki navigation, SQL evidence and execution limits. They contain no employer screenshots, client data or measured performance. Social PNGs are 1200 × 630 rasterizations of the editable SVG masters.
+
+The six self-contained HTML diagrams under `public/diagrams/ai/` were authored with Archify as fictional maintenance-assistant reference designs. They describe teaching responsibilities and required controls, rather than a private product deployment. The diagrams passed Archify showcase validation, delivery, provenance and real-browser checks; light and dark capture review was performed. Candidate specifications and validation receipts remain in the local working output, outside published assets.

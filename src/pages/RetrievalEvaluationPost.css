@@ -1,0 +1,9 @@
+.retrieval-note article p { overflow-wrap:anywhere; }
+.retrieval-note .retrieval-byline { color:#596c7d; font-size:12px; margin-top:20px; }
+.retrieval-note code { background:#eaf0f4; color:#23435b; border-radius:4px; padding:2px 5px; font-size:.9em; }
+.retrieval-results { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; margin:25px 0 20px; }
+.retrieval-results > div { display:flex; flex-direction:column; gap:8px; padding:19px; background:#f0f5f7; border:1px solid #d8e3e8; border-radius:10px; }
+.retrieval-results span { font-size:11px; font-weight:600; color:#456172; }
+.retrieval-results strong { font-size:34px; font-weight:650; color:#1e4054; letter-spacing:-.04em; }
+.retrieval-results small { font-size:11px; color:#586f7f; }
+@media(max-width:550px) { .retrieval-results { gap:8px; } .retrieval-results > div { padding:13px 10px; } .retrieval-results span,.retrieval-results small { font-size:10px; } .retrieval-results strong { font-size:27px; } }

@@ -1,0 +1,162 @@
+{
+  "schema_version": 2,
+  "diagram_type": "lifecycle",
+  "meta": {
+    "title": "A Recoverable Lakehouse Sync Lifecycle",
+    "output": "lifecycle/sync-lifecycle.html",
+    "locale": "en",
+    "quality_profile": "showcase"
+  },
+  "lanes": [
+    {
+      "id": "main",
+      "label": "Normal progression"
+    },
+    {
+      "id": "uncertain",
+      "label": "Uncertain outcome + recovery"
+    }
+  ],
+  "states": [
+    {
+      "id": "prepared",
+      "type": "start",
+      "label": "Snapshot prepared",
+      "sublabel": "stable local read + batch ID",
+      "lane": "main",
+      "col": 0,
+      "step": "01"
+    },
+    {
+      "id": "uploaded",
+      "type": "active",
+      "label": "Parts uploaded",
+      "sublabel": "verify completed object set",
+      "lane": "main",
+      "col": 1,
+      "step": "02"
+    },
+    {
+      "id": "pending",
+      "type": "waiting",
+      "label": "Commit pending",
+      "sublabel": "table / catalog operation",
+      "lane": "main",
+      "col": 2,
+      "step": "03"
+    },
+    {
+      "id": "confirmed",
+      "type": "active",
+      "label": "Commit confirmed",
+      "sublabel": "marker / snapshot if supported",
+      "lane": "main",
+      "col": 3,
+      "step": "04"
+    },
+    {
+      "id": "verified",
+      "type": "success",
+      "label": "Query verified",
+      "sublabel": "reader observes expected batch",
+      "lane": "main",
+      "col": 4,
+      "step": "05"
+    },
+    {
+      "id": "unknown",
+      "type": "waiting",
+      "label": "Outcome unknown",
+      "sublabel": "response lost or timed out",
+      "lane": "uncertain",
+      "col": 2
+    },
+    {
+      "id": "reconcile",
+      "type": "decision",
+      "label": "Reconcile state",
+      "sublabel": "lookup stable batch identity",
+      "lane": "uncertain",
+      "col": 3
+    }
+  ],
+  "transitions": [
+    {
+      "from": "prepared",
+      "to": "uploaded",
+      "label": "stage"
+    },
+    {
+      "from": "uploaded",
+      "to": "pending",
+      "label": "submit"
+    },
+    {
+      "from": "pending",
+      "to": "confirmed",
+      "label": "acknowledged"
+    },
+    {
+      "from": "confirmed",
+      "to": "verified",
+      "label": "read check"
+    },
+    {
+      "from": "pending",
+      "to": "unknown",
+      "label": "no response",
+      "variant": "dashed"
+    },
+    {
+      "from": "unknown",
+      "to": "reconcile",
+      "label": "inspect",
+      "variant": "dashed"
+    },
+    {
+      "from": "reconcile",
+      "to": "confirmed",
+      "label": "found",
+      "variant": "emphasis"
+    },
+    {
+      "from": "reconcile",
+      "to": "pending",
+      "label": "absent: safe retry",
+      "variant": "dashed"
+    },
+    {
+      "from": "reconcile",
+      "to": "unknown",
+      "label": "inconclusive: wait",
+      "variant": "dashed",
+      "route": "bottom-channel"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Reference design, not a private deployment",
+      "items": [
+        "Object completion, table publication and reader visibility are independent checks.",
+        "Table commit and snapshot APIs depend on the connector and table format."
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "Unknown is a real state",
+      "items": [
+        "A timeout does not prove that the remote operation failed.",
+        "Confirm the marker or table snapshot before replay; if the result is inconclusive, wait and inspect again."
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "Snapshots have different scopes",
+      "items": [
+        "The prepared local snapshot describes the read taken by DuckDB.",
+        "The published lakehouse snapshot describes a table version only when the destination supports it."
+      ]
+    }
+  ]
+}
